@@ -91,6 +91,14 @@ public:
         Set(vch.begin(), vch.end());
     }
 
+	//! Construct a public key from a string.
+	CPubKey(const std::string str)
+    {
+    	if(str.length() != 66)
+			return;
+    	memcpy(vch, str.c_str(), 65);
+    }
+
     //! Simple read-only vector-like interface to the pubkey data.
     unsigned int size() const { return GetLen(vch[0]); }
     const unsigned char* begin() const { return vch; }
