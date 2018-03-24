@@ -173,7 +173,7 @@ bool CMessageSigner::VerifyMessage(const CPubKey pubkey, const std::vector<unsig
 
 bool CHashSigner::SignHash(const uint256& hash, const CKey key, std::vector<unsigned char>& vchSigRet)
 {
-	std::cout << << "RecoverCompact by hash=" << hash.ToString() << std::endl
+	std::cout << "RecoverCompact by hash=" << hash.ToString() << std::endl
 		<< "vchSigRet = " << EncodeBase64(&vchSigRet[0], vchSigRet.size()) << std::endl;
     //return key.SignCompact(hash, vchSigRet);
     bool bresult = key.SignCompact(hash, vchSigRet);
