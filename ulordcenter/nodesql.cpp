@@ -110,7 +110,8 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
        }
        else 
        {
-           sql::Connection *  pConn = pPool->GetConnection();
+           //sql::Connection *  pConn = pPool->GetConnection();
+           sql::Connection *  pConn = pPool->CreateConnection();
            if(pConn==NULL)
            {    
                cout << "error  pConn  get is null "   << endl;
@@ -134,7 +135,8 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
            
            cout << "find from sql   get  size  " << vecnode.size()  << endl;
             
-           pPool->ReleaseConnection(pConn);
+           //pPool->ReleaseConnection(pConn);
+           pPool->DestoryConnection(pConn);
        }
     }
     else if(mstquest._questtype ==MST_QUEST_ALL )
