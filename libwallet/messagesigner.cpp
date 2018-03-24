@@ -157,9 +157,11 @@ bool CMessageSigner::SignMessage(const std::string strMessage, const int64_t tim
     ss << strMessage;
 	ss << timestamps;
 
-	std::cout << "word hash " << ss.GetHash().ToString() << std::endl;
+	uint256 hash = ss.GetHash();
 
-    return CHashSigner::SignHash(ss.GetHash(), key, vchSigRet);
+	std::cout << "word hash " << hash.ToString() << std::endl;
+
+    return CHashSigner::SignHash(hash, key, vchSigRet);
 }
 
 bool CMessageSigner::VerifyMessage(const CPubKey pubkey, const std::vector<unsigned char>& vchSig, const std::string strMessage, std::string& strErrorRet)
