@@ -25,16 +25,18 @@ private:
    static   ConnPool *_connPool;  
    Driver  *  _driver;  
   
-   Connection *   CreateConnection();//创建一个连接  
+   //Connection *   CreateConnection();//创建一个连接  
    void   InitConnection(int iInitialSize);//初始化数据库连接池  
    void   DestoryConnection(Connection *conn);//销毁数据库连接对象  
-   void   DestoryConnPool();//销毁数据库连接池  
+   //void   DestoryConnPool();//销毁数据库连接池  
     ConnPool(const std::string & url,const std::string & user,const std::string & password,int maxSize);//构造方法  
 public:  
     ~ConnPool(); 
     Connection  *  GetConnection();//获得数据库连接  
     void  ReleaseConnection(Connection *conn);//将数据库连接放回到连接池的容器中  
     static ConnPool *GetInstance(std::string user, std::string passwd , int nConnNum);//获取数据库连接池对象  
-    static ConnPool *GetInstance();//获取数据库连接池对象  
+    static ConnPool *GetInstance();//获取数据库连接池对象
+    Connection *   CreateConnection();//创建一个连接
+    void   DestoryConnPool();//销毁数据库连接池
 };  
 #endif  /*_CONNECTION_POOL_H */
