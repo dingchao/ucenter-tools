@@ -138,7 +138,7 @@ void   ConnPool::ReleaseConnection(sql::Connection * conn){
 //连接池的析构函数  
 ConnPool::~ConnPool()  
 {  
-    this->DestoryConnPool();  
+    this->DestroyConnPool();  
 }  
 //销毁连接池,首先要先销毁连接池的中连接  
 void  ConnPool::DestoryConnPool(){  
@@ -153,7 +153,7 @@ void  ConnPool::DestoryConnPool(){
     pthread_mutex_unlock(&_lock);  
 }  
 //销毁一个连接  
-void  ConnPool::DestoryConnection(Connection* conn)  
+void  ConnPool::DestroyConnection(Connection* conn)  
 {  
     if(conn)  
     {  
