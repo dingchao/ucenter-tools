@@ -1,0 +1,6 @@
+include_directories(${PROJECT_SOURCE_DIR}/include   ${PROJECT_SOURCE_DIR}/libqtutils)
+include_directories(${PROJECT_SOURCE_DIR}/secp256k1/include)
+set(LIB_SRC hello.cpp loopbuf.cpp)
+add_library(libqtutils ${LIB_SRC})
+set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+set_target_properties(libqtutils PROPERTIES OUTPUT_NAME "qtutils")
