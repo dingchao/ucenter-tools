@@ -157,11 +157,7 @@ bool CMessageSigner::SignMessage(const std::string strMessage, const int64_t tim
     ss << strMessage;
 	ss << timestamps;
 
-	uint256 hash = ss.GetHash();
-
-	std::cout << "word hash " << hash.ToString() << std::endl;
-
-    return CHashSigner::SignHash(hash, key, vchSigRet);
+	return CHashSigner::SignHash(ss.GetHash(), key, vchSigRet);
 }
 
 bool CMessageSigner::VerifyMessage(const CPubKey pubkey, const std::vector<unsigned char>& vchSig, const std::string strMessage, std::string& strErrorRet)
@@ -175,18 +171,7 @@ bool CMessageSigner::VerifyMessage(const CPubKey pubkey, const std::vector<unsig
 
 bool CHashSigner::SignHash(const uint256& hash, const CKey key, std::vector<unsigned char>& vchSigRet)
 {
-	std::cout << "RecoverCompact by hash=" << hash.ToString() << std::endl
-		<< "vchSigRet = " << EncodeBase64(&vchSigRet[0], vchSigRet.size()) << std::endl;
-    //return key.SignCompact(hash, vchSigRet);
-    bool bresult = key.SignCompact(hash, vchSigRet);
-
-	CPubKey pubkeyFromSig;
-    if(!pubkeyFromSig.RecoverCompact(hash, vchSigRet)) {
-        std::cout << "Error recovering public key."<< std::endl;
-        return false;
-    }
-	std::cout << "pubkeyFromSig is " << pubkeyFromSig.GetID().ToString() << std::endl;
-	return bresult;
+	return key.SignCompact(hash, vchSigRet);
 }
 
 bool CHashSigner::VerifyHash(const uint256& hash, const CPubKey pubkey, const std::vector<unsigned char>& vchSig, std::string& strErrorRet)
