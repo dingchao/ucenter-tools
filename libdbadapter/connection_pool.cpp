@@ -146,7 +146,7 @@ void  ConnPool::DestroyConnPool(){
     pthread_mutex_lock(&_lock);  
     for(icon=_connList.begin();icon!=_connList.end();++icon)  
     {  
-        this->DestoryConnection(*icon);//销毁连接池中的连接  
+        this->DestroyConnection(*icon);//销毁连接池中的连接  
     }  
     _curSize=0;  
     _connList.clear();//清空连接池中的连接  
