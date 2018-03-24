@@ -72,7 +72,7 @@ std::string  SignMessage( std::string addr, int64_t timeStamps)
    CPubKey pubkeyRet;
    GetKeyFromString(  keyRet,  pubkeyRet,  g_privkeystr,   g_pubkeystr ) ;
 
-   CPubKey testKey(g_pubkeystr);
+   CPubKey testKey(ParseHex(g_pubkeystr));
 
    cout<< "Pubkey: str=" << g_pubkeystr << endl
    		<< "center key=" << pubkeyRet.GetID().ToString() << endl
