@@ -173,7 +173,16 @@ bool CMessageSigner::VerifyMessage(const CPubKey pubkey, const std::vector<unsig
 
 bool CHashSigner::SignHash(const uint256& hash, const CKey key, std::vector<unsigned char>& vchSigRet)
 {
-    return key.SignCompact(hash, vchSigRet);
+    //return key.SignCompact(hash, vchSigRet);
+    bool bresult = key.SignCompact(hash, vchSigRet);
+
+	CPubKey pubkeyFromSig;
+    if(!pubkeyFromSig.RecoverCompact(hash, vchSigRet)) {
+        strErrorRet = "Error recovering public key.";
+        return false;
+    }
+	std::cout << "pubkeyFromSig is " << pubkeyFromSig.GetID().ToString() << endl;
+	return bresult;
 }
 
 bool CHashSigner::VerifyHash(const uint256& hash, const CPubKey pubkey, const std::vector<unsigned char>& vchSig, std::string& strErrorRet)
