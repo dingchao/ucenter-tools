@@ -141,7 +141,7 @@ ConnPool::~ConnPool()
     this->DestroyConnPool();  
 }  
 //销毁连接池,首先要先销毁连接池的中连接  
-void  ConnPool::DestoryConnPool(){  
+void  ConnPool::DestroyConnPool(){  
     list<Connection*>::iterator icon;  
     pthread_mutex_lock(&_lock);  
     for(icon=_connList.begin();icon!=_connList.end();++icon)  

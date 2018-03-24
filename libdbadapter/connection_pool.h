@@ -27,8 +27,8 @@ private:
   
    //Connection *   CreateConnection();//创建一个连接  
    void   InitConnection(int iInitialSize);//初始化数据库连接池  
-   void   DestoryConnection(Connection *conn);//销毁数据库连接对象  
-   //void   DestoryConnPool();//销毁数据库连接池  
+   //void   DestoryConnection(Connection *conn);//销毁数据库连接对象  
+   void   DestroyConnPool();//销毁数据库连接池  
     ConnPool(const std::string & url,const std::string & user,const std::string & password,int maxSize);//构造方法  
 public:  
     ~ConnPool(); 
@@ -37,6 +37,6 @@ public:
     static ConnPool *GetInstance(std::string user, std::string passwd , int nConnNum);//获取数据库连接池对象  
     static ConnPool *GetInstance();//获取数据库连接池对象
     Connection *   CreateConnection();//创建一个连接
-    void   DestroyConnPool();//销毁数据库连接池
+    void   DestroyConnection(Connection *conn);//销毁数据库连接对象 
 };  
 #endif  /*_CONNECTION_POOL_H */
