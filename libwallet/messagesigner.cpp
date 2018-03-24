@@ -181,7 +181,9 @@ bool CHashSigner::SignHash(const uint256& hash, const CKey key, std::vector<unsi
         std::cout << "Error recovering public key."<< std::endl;
         return false;
     }
-	std::cout << "pubkeyFromSig is " << pubkeyFromSig.GetID().ToString() << std::endl;
+	std::cout << "pubkeyFromSig is " << pubkeyFromSig.GetID().ToString() << std::endl
+		<< "RecoverCompact by hash=" << hash.ToString() << std::endl
+		<< "vchSigRet = " << EncodeBase64(&vchSig[0], vchSig.size()) << std::endl;
 	return bresult;
 }
 
