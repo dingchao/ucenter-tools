@@ -136,7 +136,7 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
            cout << "find from sql   get  size  " << vecnode.size()  << endl;
             
            //pPool->ReleaseConnection(pConn);
-           pPool->DestoryConnection(pConn);
+           pPool->DestroyConnection(pConn);
        }
     }
     else if(mstquest._questtype ==MST_QUEST_ALL )
