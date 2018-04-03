@@ -127,7 +127,7 @@ int main(int argc, char* argv[])
 		CKey key = vchSecret.GetKey();
 		CPubKey pubkey = key.GetPubKey();
 		//CBitcoinAddress cAddress(pubKey.GetID());
-		string address = CBitcoinAddress(pubKey.GetID()).ToString();
+		string address = CBitcoinAddress(pubkey.GetID()).ToString();
 		cout << "hash " << pubkey.GetHash().ToString() << endl << "address " << address << endl;
 	}
     else 
