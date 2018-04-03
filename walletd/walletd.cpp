@@ -119,11 +119,11 @@ int main(int argc, char* argv[])
     }
 	else if(stropt==string("priv"))
 	{
-		string strPri(argv[2]);
+		/*string strPri(argv[2]);
 		//CPubKey pubkey(ParseHex(strPri));
 		//cout << "hash " << pubkey.GetHash().ToString() << endl;
 		CBitcoinSecret vchSecret;
-    	bool fGood = vchSecret.SetString(ParseHex(strPri));
+    	bool fGood = vchSecret.SetString(strPri);
 		if(!fGood)
 		{
 			cout << "setstring failed" << endl;
@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
 		CPubKey pubkey = key.GetPubKey();
 		//CBitcoinAddress cAddress(pubKey.GetID());
 		string address = CBitcoinAddress(pubkey.GetID()).ToString();
-		cout << "hash " << pubkey.GetHash().ToString() << endl << "address " << address << endl;
+		cout << "hash " << pubkey.GetHash().ToString() << endl << "address " << address << endl;*/
 	}
     else 
     {
