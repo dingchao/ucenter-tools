@@ -1077,10 +1077,12 @@ bool CWallet::GetKeyFromPool(CPubKey& result)
         {
             if (IsLocked(true)) return false;
             result = GenerateNewKey();
+			cout << "newkey " << result.size() << endl;
             return true;
         }
         KeepKey(nIndex);
         result = keypool.vchPubKey;
+		cout << "keypool " << result.size() << endl;
     }
     return true;
 }
