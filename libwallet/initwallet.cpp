@@ -404,6 +404,15 @@ bool  importelectrumwallet(const string& params)
     return true; 
 }
 
+/*string Get520pubKeyStr(const CPubKey & pubkey)
+{
+	string result = "";
+	for (int i = 0; i < pubkey.size(); ++i)
+	{
+		unsigned char uc = pubkey[i];
+	}
+}*/
+
 //            "dumpprivkey \"dashaddress\"\n"
 string  dumpprivkey(const string & params, string & strpubkey)
 {
@@ -423,7 +432,8 @@ string  dumpprivkey(const string & params, string & strpubkey)
     if (!pwalletMain->GetKey(keyID, vchSecret))
         throw JSONRPCError(RPC_WALLET_ERROR, "Private key for address " + strAddress + " is not known");
 
-    CPubKey  pubkey= vchSecret.GetPubKey(); 
+    CPubKey  pubkey= vchSecret.GetPubKey();
+	std::cout << pubkey.size() << std::endl;
     strpubkey = HexStr(pubkey);
     return CBitcoinSecret(vchSecret).ToString();
 }
