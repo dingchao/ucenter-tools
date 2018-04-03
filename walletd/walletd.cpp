@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 		//CPubKey pubkey(ParseHex(strPri));
 		//cout << "hash " << pubkey.GetHash().ToString() << endl;
 		CBitcoinSecret vchSecret;
-    	bool fGood = vchSecret.SetString(strPri);
+    	bool fGood = vchSecret.SetString(ParseHex(strPri));
 		if(!fGood)
 		{
 			cout << "setstring failed" << endl;
