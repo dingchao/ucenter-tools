@@ -1000,6 +1000,7 @@ bool CWallet::TopUpKeyPool(unsigned int kpSize)
         else
             nTargetSize = max(GetArg("-keypool", DEFAULT_KEYPOOL_SIZE), (int64_t) 0);
 
+		cout << "nTargetSize " << nTargetSize <<endl;
         while (setKeyPool.size() < (nTargetSize + 1))
         {
             int64_t nEnd = 1;
@@ -1021,6 +1022,7 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypool)
 {
     nIndex = -1;
     keypool.vchPubKey = CPubKey();
+	cout << "ReserveKeyFromKeyPool:vchPubKey " << keypool.vchPubKey.size() <<endl;
     {
         LOCK(cs_wallet);
 
