@@ -26,7 +26,7 @@ message(STATUS "boost_LIB_DIR="  ${Boost_LIBRARIES})
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 #add_executable(testma ${APP_SRC})
 
-set(IMPORTLIB   wallet secp256k1  ${OPENSSL_CRYPTO_LIBRARY} ${OPENSSL_SSL_LIBRARY}  ${secp256k1_LIBRARIES} ${Boost_LIBRARIES}
+set(IMPORTLIB   wallet  ${OPENSSL_CRYPTO_LIBRARY} ${OPENSSL_SSL_LIBRARY}  ${secp256k1_LIBRARIES} ${Boost_LIBRARIES}
   boost_system boost_filesystem boost_program_options boost_thread  
   boost_log_setup db_cxx-4.8  pthread  m
   qtutils 
