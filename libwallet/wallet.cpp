@@ -141,6 +141,7 @@ CPubKey CWallet::GenerateNewKey()
         SetMinVersion(FEATURE_COMPRPUBKEY);
 
     CPubKey pubkey = secret.GetPubKey();
+	cout << "GenerateNewKey pubkey size " << pubkey.size() << endl;
     assert(secret.VerifyPubKey(pubkey));
 
     // Create new metadata
@@ -159,7 +160,7 @@ bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey &pubkey)
     AssertLockHeld(cs_wallet); // mapKeyMetadata
     if (!CCryptoKeyStore::AddKeyPubKey(secret, pubkey))
         return false;
-
+	cout << "AddKeyPubKey pubkey size " << pubkey.size() << endl;
     // check if we need to remove from watch-only
     CScript script;
     script = GetScriptForDestination(pubkey.GetID());
