@@ -116,7 +116,20 @@ int main(int argc, char* argv[])
       string  strWalletFile(argv[2]);
       importwallet(strWalletFile);
        cout<<"import wallet  "<<strWalletFile <<endl;
-    } 
+    }
+	else if(stropt==string("priv"))
+	{
+		string strPri(argv[2]);
+		//CPubKey pubkey(ParseHex(strPri));
+		//cout << "hash " << pubkey.GetHash().ToString() << endl;
+		CBitcoinSecret vchSecret;
+    	bool fGood = vchSecret.SetString(strPri);
+		CKey key = vchSecret.GetKey();
+		CPubKey pubkey = key.GetPubKey();
+		//CBitcoinAddress cAddress(pubKey.GetID());
+		string address = CBitcoinAddress(pubKey.GetID()).ToString();
+		cout << "hash " << pubkey.GetHash().ToString() << endl << "address " << address << endl;
+	}
     else 
     {
        printhelp();
@@ -129,7 +142,7 @@ int main(int argc, char* argv[])
 
    return 0 ;
 
-   CLoopBuf * sendbuf =new CLoopBuf;
+   /*CLoopBuf * sendbuf =new CLoopBuf;
    CLoopBuf * recvbuf  = new CLoopBuf;
 
    sendbuf->Init(6553600 , "walletsend_buf",1 ,1 );
@@ -146,5 +159,5 @@ int main(int argc, char* argv[])
 
     
    //char szBuf[128];
-   return 0;
+   return 0;*/
 }
