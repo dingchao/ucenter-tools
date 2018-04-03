@@ -231,7 +231,7 @@ netsize               int NOT NULL DEFAULT '0',
 cpusize               int NOT NULL DEFAULT '0',
 ramsize               int NOT NULL DEFAULT '0',
 score                 int NOT NULL DEFAULT '0',
-revser1(validflag)    int NOT NULL DEFAULT '0',
+validflag             int NOT NULL DEFAULT '0',
  */
     CMstNodeData mstnode;
     sql::ResultSet * resultSet =  stmt->executeQuery(sqlBuf);
