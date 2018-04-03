@@ -1031,6 +1031,8 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypool)
         if (!IsLocked(true))
             TopUpKeyPool();
 
+		cout << "ReserveKeyFromKeyPool:TopUpKeyPool " << keypool.vchPubKey.size() <<endl;
+
         // Get the oldest key
         if(setKeyPool.empty())
             return;
@@ -1041,8 +1043,10 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypool)
         setKeyPool.erase(setKeyPool.begin());
         if (!walletdb.ReadPool(nIndex, keypool))
             throw runtime_error("ReserveKeyFromKeyPool(): read failed");
+		cout << "ReserveKeyFromKeyPool:ReadPool " << keypool.vchPubKey.size() <<endl;
         if (!HaveKey(keypool.vchPubKey.GetID()))
             throw runtime_error("ReserveKeyFromKeyPool(): unknown key in key pool");
+		cout << "ReserveKeyFromKeyPool:HaveKey " << keypool.vchPubKey.size() <<endl;
         assert(keypool.vchPubKey.IsValid());
         LogPrintf("keypool reserve %d\n", nIndex);
     }
