@@ -162,6 +162,7 @@ bool CWalletDB::ReadPool(int64_t nPool, CKeyPool& keypool)
 bool CWalletDB::WritePool(int64_t nPool, const CKeyPool& keypool)
 {
     nWalletDBUpdated++;
+	cout << "WritePool keypool " << keypool.vchPubKey.size() << endl;
     return Write(std::make_pair(std::string("pool"), nPool), keypool);
 }
 
