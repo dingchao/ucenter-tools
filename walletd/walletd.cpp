@@ -48,7 +48,7 @@ public:
         // Testnet Ulord BIP44 coin type is '1' (All coin's testnet default)
         base58Prefixes[EXT_COIN_TYPE]  = boost::assign::list_of(0x80)(0x00)(0x00)(0x01).convert_to_container<std::vector<unsigned char> >();
     };
-}
+};
 
 void printhelp()
 {
@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
        string  strkey(argv[2]);
        string  addr;
        bool bret= importprivkey(strkey ,addr);
-       cout<<"import privkey  " << strkey  <<"  addr  "<< addr   <<endl;
+       cout << bret <<" import privkey  " << strkey  <<"  addr  "<< addr   <<endl;
     }
     else if(stropt==string("importwallet") ) 
     {
@@ -145,6 +145,6 @@ int main(int argc, char* argv[])
    }
 
     
-   char szBuf[128];
+   //char szBuf[128];
    return 0;
 }
