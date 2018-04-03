@@ -18,82 +18,86 @@
 
 
 using namespace std;
+class CBase58{
+public:
+    enum Base58Type {
+            PUBKEY_ADDRESS,
+            SCRIPT_ADDRESS,
+            SECRET_KEY,     // BIP16
+            EXT_PUBLIC_KEY, // BIP32
+            EXT_SECRET_KEY, // BIP32
+            EXT_COIN_TYPE,  // BIP44
 
-enum Base58Type {
-        PUBKEY_ADDRESS,
-        SCRIPT_ADDRESS,
-        SECRET_KEY,     // BIP16
-        EXT_PUBLIC_KEY, // BIP32
-        EXT_SECRET_KEY, // BIP32
-        EXT_COIN_TYPE,  // BIP44
-
-        MAX_BASE58_TYPES
+            MAX_BASE58_TYPES
+        };
+protected:
+    std::vector<unsigned char> base58Prefixes[MAX_BASE58_TYPES];
+public:
+    CBase58()
+    {
+        // Testnet Ulord addresses start with 'u'
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,130);
+        // Testnet Ulord script addresses start with 's'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,125);
+        // Testnet private keys start with '9' or 'c'(as in Bitcoin)
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,0xef);
+        // Testnet Ulord BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
+        // Testnet Ulord BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
+        // Testnet Ulord BIP44 coin type is '1' (All coin's testnet default)
+        base58Prefixes[EXT_COIN_TYPE]  = boost::assign::list_of(0x80)(0x00)(0x00)(0x01).convert_to_container<std::vector<unsigned char> >();
     };
 
-std::vector<unsigned char> base58Prefixes[MAX_BASE58_TYPES];
-
-// Testnet Ulord addresses start with 'u'
-base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,130);
-// Testnet Ulord script addresses start with 's'
-base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,125);
-// Testnet private keys start with '9' or 'c'(as in Bitcoin)
-base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,0xef);
-// Testnet Ulord BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
-base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
-// Testnet Ulord BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
-base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
-// Testnet Ulord BIP44 coin type is '1' (All coin's testnet default)
-base58Prefixes[EXT_COIN_TYPE]  = boost::assign::list_of(0x80)(0x00)(0x00)(0x01).convert_to_container<std::vector<unsigned char> >();
-
-std::string EncodeBase58(const unsigned char* pbegin, const unsigned char* pend)
-{
-    // Skip & count leading zeroes.
-    int zeroes = 0;
-    while (pbegin != pend && *pbegin == 0) {
-        pbegin++;
-        zeroes++;
-    }
-    // Allocate enough space in big-endian base58 representation.
-    std::vector<unsigned char> b58((pend - pbegin) * 138 / 100 + 1); // log(256) / log(58), rounded up.
-    // Process the bytes.
-    while (pbegin != pend) {
-        int carry = *pbegin;
-        // Apply "b58 = b58 * 256 + ch".
-        for (std::vector<unsigned char>::reverse_iterator it = b58.rbegin(); it != b58.rend(); it++) {
-            carry += 256 * (*it);
-            *it = carry % 58;
-            carry /= 58;
+    std::string EncodeBase58(const unsigned char* pbegin, const unsigned char* pend)
+    {
+        // Skip & count leading zeroes.
+        int zeroes = 0;
+        while (pbegin != pend && *pbegin == 0) {
+            pbegin++;
+            zeroes++;
         }
-        assert(carry == 0);
-        pbegin++;
-    }
-    // Skip leading zeroes in base58 result.
-    std::vector<unsigned char>::iterator it = b58.begin();
-    while (it != b58.end() && *it == 0)
-        it++;
-    // Translate the result into a string.
-    std::string str;
-    str.reserve(zeroes + (b58.end() - it));
-    str.assign(zeroes, '1');
-    while (it != b58.end())
-        str += pszBase58[*(it++)];
-    return str;
-}
+        // Allocate enough space in big-endian base58 representation.
+        std::vector<unsigned char> b58((pend - pbegin) * 138 / 100 + 1); // log(256) / log(58), rounded up.
+        // Process the bytes.
+        while (pbegin != pend) {
+            int carry = *pbegin;
+            // Apply "b58 = b58 * 256 + ch".
+            for (std::vector<unsigned char>::reverse_iterator it = b58.rbegin(); it != b58.rend(); it++) {
+                carry += 256 * (*it);
+                *it = carry % 58;
+                carry /= 58;
+            }
+            assert(carry == 0);
+            pbegin++;
+        }
+        // Skip leading zeroes in base58 result.
+        std::vector<unsigned char>::iterator it = b58.begin();
+        while (it != b58.end() && *it == 0)
+            it++;
+        // Translate the result into a string.
+        std::string str;
+        str.reserve(zeroes + (b58.end() - it));
+        str.assign(zeroes, '1');
+        while (it != b58.end())
+            str += pszBase58[*(it++)];
+        return str;
+    };
 
-std::string EncodeBase58(const std::vector<unsigned char>& vch)
-{
-    return EncodeBase58(&vch[0], &vch[0] + vch.size());
-}
+    std::string EncodeBase58(const std::vector<unsigned char>& vch)
+    {
+        return EncodeBase58(&vch[0], &vch[0] + vch.size());
+    };
 
-std::string EncodeBase58Check(const std::vector<unsigned char>& vchIn)
-{
-    // add 4-byte hash check to the end
-    std::vector<unsigned char> vch(vchIn);
-    uint256 hash = Hash(vch.begin(), vch.end());
-    vch.insert(vch.end(), (unsigned char*)&hash, (unsigned char*)&hash + 4);
-    return EncodeBase58(vch);
+    std::string EncodeBase58Check(const std::vector<unsigned char>& vchIn)
+    {
+        // add 4-byte hash check to the end
+        std::vector<unsigned char> vch(vchIn);
+        uint256 hash = Hash(vch.begin(), vch.end());
+        vch.insert(vch.end(), (unsigned char*)&hash, (unsigned char*)&hash + 4);
+        return EncodeBase58(vch);
+    };
 }
-
 
 void printhelp()
 {
