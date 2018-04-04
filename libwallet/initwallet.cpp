@@ -87,7 +87,7 @@ bool  initwallet()
     int nMaxVersion=0;
     bool fFirstRun = true;
     pwalletMain = new CWallet(strWalletFile);
-    SelectParams("main");
+    //SelectParams("main");
     DBErrors nLoadWalletRet = pwalletMain->LoadWallet(fFirstRun);
    
     if (nLoadWalletRet != DB_LOAD_OK)
