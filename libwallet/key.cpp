@@ -175,7 +175,7 @@ CPubKey CKey::GetPubKey520() const {
     size_t clen = 65;
     CPubKey result;
     int ret = secp256k1_ec_pubkey_create(secp256k1_context_sign, &pubkey, begin());
-	showbuf(pubkey.data, clen, "GetPubKey:create");
+	showbuf(pubkey.data, clen, "GetPubKey520:create");
     assert(ret);
     assert(result.size() == clen);
     assert(result.IsValid());
@@ -189,10 +189,8 @@ CPubKey CKey::GetPubKey() const {
     size_t clen = 65;
     CPubKey result;
     int ret = secp256k1_ec_pubkey_create(secp256k1_context_sign, &pubkey, begin());
-	showbuf(pubkey.data, clen, "GetPubKey:create");
     assert(ret);
     secp256k1_ec_pubkey_serialize(secp256k1_context_sign, (unsigned char*)result.begin(), &clen, &pubkey, fCompressed ? SECP256K1_EC_COMPRESSED : SECP256K1_EC_UNCOMPRESSED);
-	showbuf(pubkey.data, clen, "GetPubKey:serialize");
     assert(result.size() == clen);
     assert(result.IsValid());
     return result;
