@@ -161,8 +161,8 @@ int main(int argc, char* argv[])
    {
        cout<<"very failed "<< strErrorRet<<endl;
    }
-   char * p; 
-   char szBuf[128];
+   //char * p; 
+   //char szBuf[128];
    system("pause");
 
    return 0;

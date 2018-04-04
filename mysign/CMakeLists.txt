@@ -22,7 +22,7 @@ message(STATUS "boost_LIB_DIR="  ${Boost_LIBRARIES})
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
-set(IMPORTLIB wallet secp256k1 ${OPENSSL_CRYPTO_LIBRARY} ${OPENSSL_SSL_LIBRARY}   ${Boost_LIBRARIES}
+set(IMPORTLIB wallet ${secp256k1_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARY} ${OPENSSL_SSL_LIBRARY}   ${Boost_LIBRARIES}
   boost_system boost_filesystem boost_program_options boost_thread   
   boost_log_setup db_cxx-4.8  pthread  m  
 )
