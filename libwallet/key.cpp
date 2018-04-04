@@ -169,6 +169,19 @@ void showbuf(unsigned char * buf, int len, std::string title)
 	printf("\n");
 }
 
+CPubKey CKey::GetPubKey520() const {
+    assert(fValid);
+    secp256k1_pubkey pubkey;
+    size_t clen = 65;
+    CPubKey result;
+    int ret = secp256k1_ec_pubkey_create(secp256k1_context_sign, &pubkey, begin());
+	showbuf(pubkey.data, clen, "GetPubKey:create");
+    assert(ret);
+    assert(result.size() == clen);
+    assert(result.IsValid());
+    return result;
+}
+
 
 CPubKey CKey::GetPubKey() const {
     assert(fValid);

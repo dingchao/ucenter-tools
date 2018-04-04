@@ -13,42 +13,10 @@
 #include <secp256k1_ecdh.h>
 #include <secp256k1.h>
 #include "base58.h"
-#include <boost/assign/list_of.hpp>
 
 
 
 using namespace std;
-class CBase58{
-public:
-    enum Base58Type {
-            PUBKEY_ADDRESS,
-            SCRIPT_ADDRESS,
-            SECRET_KEY,     // BIP16
-            EXT_PUBLIC_KEY, // BIP32
-            EXT_SECRET_KEY, // BIP32
-            EXT_COIN_TYPE,  // BIP44
-
-            MAX_BASE58_TYPES
-        };
-protected:
-    std::vector<unsigned char> base58Prefixes[MAX_BASE58_TYPES];
-public:
-    CBase58()
-    {
-        // Testnet Ulord addresses start with 'u'
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,130);
-        // Testnet Ulord script addresses start with 's'
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,125);
-        // Testnet private keys start with '9' or 'c'(as in Bitcoin)
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,0xef);
-        // Testnet Ulord BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
-        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
-        // Testnet Ulord BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
-        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
-        // Testnet Ulord BIP44 coin type is '1' (All coin's testnet default)
-        base58Prefixes[EXT_COIN_TYPE]  = boost::assign::list_of(0x80)(0x00)(0x00)(0x01).convert_to_container<std::vector<unsigned char> >();
-    };
-};
 
 void printhelp()
 {
@@ -101,8 +69,9 @@ int main(int argc, char* argv[])
     else if(stropt==string("dumpprivkey") ) 
     {
        string  straddr(argv[2]);
-       string privkey= dumpprivkey(straddr,pubkey);
-       cout<<"dump privkey  "<<straddr<<" priv key "  << privkey  <<"  pub key  "<< pubkey   <<endl;
+	   string pubkey520;
+       string privkey= dumpprivkey(straddr,pubkey,pubkey520);
+       cout<<"dump privkey  "<<straddr<<" priv key "  << privkey  <<"  pub key  "<< pubkey   <<endl << "punkey " << pubkey520 << endl;
     }   
     else if(stropt==string("importprivkey") )
     {
@@ -116,25 +85,7 @@ int main(int argc, char* argv[])
       string  strWalletFile(argv[2]);
       importwallet(strWalletFile);
        cout<<"import wallet  "<<strWalletFile <<endl;
-    }
-	else if(stropt==string("priv"))
-	{
-		/*string strPri(argv[2]);
-		//CPubKey pubkey(ParseHex(strPri));
-		//cout << "hash " << pubkey.GetHash().ToString() << endl;
-		CBitcoinSecret vchSecret;
-    	bool fGood = vchSecret.SetString(strPri);
-		if(!fGood)
-		{
-			cout << "setstring failed" << endl;
-			return 0;
-		}
-		CKey key = vchSecret.GetKey();
-		CPubKey pubkey = key.GetPubKey();
-		//CBitcoinAddress cAddress(pubKey.GetID());
-		string address = CBitcoinAddress(pubkey.GetID()).ToString();
-		cout << "hash " << pubkey.GetHash().ToString() << endl << "address " << address << endl;*/
-	}
+    } 
     else 
     {
        printhelp();
