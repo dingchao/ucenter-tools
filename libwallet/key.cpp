@@ -153,7 +153,7 @@ CPrivKey CKey::GetPrivKey() const {
     return privkey;
 }
 
-void showbuf(char * buf, int len, std::string title)
+void showbuf(unsigned char * buf, int len, std::string title)
 {
 	int i = 0, count = 0;
 	printf("%s:\n", title.c_str());
