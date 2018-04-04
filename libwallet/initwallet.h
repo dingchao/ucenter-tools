@@ -84,7 +84,7 @@ void exitwallet();
 bool  dumpwallet(std::string  walletfile);
 bool  importwallet(std::string walletfile);
 std::string getnewaddress(std::string strAccount,std::string & strpubkey);
-std::string dumpprivkey(const std::string & straddr, std::string & pubkey, string & strpubkey520);
+std::string dumpprivkey(const std::string & straddr, std::string & pubkey, std::string & strpubkey520);
 bool  importprivkey(const std::string& params, std::string & addr);
 
 #endif
