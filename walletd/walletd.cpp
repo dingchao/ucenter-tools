@@ -37,7 +37,8 @@ int main(int argc, char* argv[])
    int startheight, endheight;
    readcfg(startheight,endheight,dbuser,dbhost,dbpass);
   
-    Secp256k1Init ecc("main");
+    //Secp256k1Init ecc("main");
+    Secp256k1Init ecc("test");
     initwallet();
 
     
