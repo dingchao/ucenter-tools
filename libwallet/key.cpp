@@ -153,36 +153,6 @@ CPrivKey CKey::GetPrivKey() const {
     return privkey;
 }
 
-void showbuf(unsigned char * buf, int len, std::string title)
-{
-	int i = 0, count = 0;
-	printf("%s:\n", title.c_str());
-	for (i = 0; i < len; ++i)
-	{
-		printf("%02x", buf[i]);
-		count++;
-		if(count % 8 == 0)
-			printf(" ");
-		if(count % 16 == 0)
-			printf("\n");
-	}
-	printf("\n");
-}
-
-CPubKey CKey::GetPubKey520() const {
-    assert(fValid);
-    secp256k1_pubkey pubkey;
-    size_t clen = 65;
-    CPubKey result;
-    int ret = secp256k1_ec_pubkey_create(secp256k1_context_sign, &pubkey, begin());
-	showbuf(pubkey.data, clen, "GetPubKey520:create");
-    assert(ret);
-    assert(result.size() == clen);
-    assert(result.IsValid());
-    return result;
-}
-
-
 CPubKey CKey::GetPubKey() const {
     assert(fValid);
     secp256k1_pubkey pubkey;
@@ -195,6 +165,20 @@ CPubKey CKey::GetPubKey() const {
     assert(result.IsValid());
     return result;
 }
+
+CPubKey CKey::GetUnCompressedsPubKey() const {
+    assert(fValid);
+    secp256k1_pubkey pubkey;
+    size_t clen = 65;
+    CPubKey result;
+    int ret = secp256k1_ec_pubkey_create(secp256k1_context_sign, &pubkey, begin());
+    assert(ret);
+    secp256k1_ec_pubkey_serialize(secp256k1_context_sign, (unsigned char*)result.begin(), &clen, &pubkey, SECP256K1_EC_UNCOMPRESSED);
+    assert(result.size() == clen);
+    assert(result.IsValid());
+    return result;
+}
+
 
 bool CKey::Sign(const uint256 &hash, std::vector<unsigned char>& vchSig, uint32_t test_case) const {
     if (!fValid)

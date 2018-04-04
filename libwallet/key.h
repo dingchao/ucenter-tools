@@ -119,7 +119,7 @@ public:
      * This is expensive.
      */
     CPubKey GetPubKey() const;
-	CPubKey GetPubKey520() const;
+	CPubKey GetUnCompressedsPubKey() const;
 
     /**
      * Create a DER-serialized signature.

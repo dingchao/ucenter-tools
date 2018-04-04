@@ -131,9 +131,8 @@ const CWalletTx* CWallet::GetWalletTx(const uint256& hash) const
 CPubKey CWallet::GenerateNewKey()
 {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
-    //bool fCompressed = CanSupportFeature(FEATURE_COMPRPUBKEY); // default to compressed public keys if we want 0.6.0 wallets
-	bool fCompressed = false;
-	
+    bool fCompressed = CanSupportFeature(FEATURE_COMPRPUBKEY); // default to compressed public keys if we want 0.6.0 wallets
+
     CKey secret;
     secret.MakeNewKey(fCompressed);
 
@@ -142,7 +141,6 @@ CPubKey CWallet::GenerateNewKey()
         SetMinVersion(FEATURE_COMPRPUBKEY);
 
     CPubKey pubkey = secret.GetPubKey();
-	cout << "GenerateNewKey pubkey size " << pubkey.size() << endl;
     assert(secret.VerifyPubKey(pubkey));
 
     // Create new metadata
@@ -161,7 +159,7 @@ bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey &pubkey)
     AssertLockHeld(cs_wallet); // mapKeyMetadata
     if (!CCryptoKeyStore::AddKeyPubKey(secret, pubkey))
         return false;
-	cout << "AddKeyPubKey pubkey size " << pubkey.size() << endl;
+
     // check if we need to remove from watch-only
     CScript script;
     script = GetScriptForDestination(pubkey.GetID());
@@ -1002,7 +1000,6 @@ bool CWallet::TopUpKeyPool(unsigned int kpSize)
         else
             nTargetSize = max(GetArg("-keypool", DEFAULT_KEYPOOL_SIZE), (int64_t) 0);
 
-		cout << "nTargetSize " << nTargetSize <<endl;
         while (setKeyPool.size() < (nTargetSize + 1))
         {
             int64_t nEnd = 1;
@@ -1024,14 +1021,11 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypool)
 {
     nIndex = -1;
     keypool.vchPubKey = CPubKey();
-	cout << "ReserveKeyFromKeyPool:vchPubKey " << keypool.vchPubKey.size() <<endl;
     {
         LOCK(cs_wallet);
 
         if (!IsLocked(true))
             TopUpKeyPool();
-
-		cout << "ReserveKeyFromKeyPool:TopUpKeyPool " << keypool.vchPubKey.size() <<endl;
 
         // Get the oldest key
         if(setKeyPool.empty())
@@ -1043,10 +1037,8 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypool)
         setKeyPool.erase(setKeyPool.begin());
         if (!walletdb.ReadPool(nIndex, keypool))
             throw runtime_error("ReserveKeyFromKeyPool(): read failed");
-		cout << "ReserveKeyFromKeyPool:ReadPool " << keypool.vchPubKey.size() <<endl;
         if (!HaveKey(keypool.vchPubKey.GetID()))
             throw runtime_error("ReserveKeyFromKeyPool(): unknown key in key pool");
-		cout << "ReserveKeyFromKeyPool:HaveKey " << keypool.vchPubKey.size() <<endl;
         assert(keypool.vchPubKey.IsValid());
         LogPrintf("keypool reserve %d\n", nIndex);
     }
@@ -1085,12 +1077,10 @@ bool CWallet::GetKeyFromPool(CPubKey& result)
         {
             if (IsLocked(true)) return false;
             result = GenerateNewKey();
-			cout << "newkey " << result.size() << endl;
             return true;
         }
         KeepKey(nIndex);
         result = keypool.vchPubKey;
-		cout << "keypool " << result.size() << endl;
     }
     return true;
 }
