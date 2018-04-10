@@ -100,6 +100,22 @@ void showbuf(const std::vector<unsigned char> & buf)
 	printf("\n");
 }
 
+void showbuf(const char * buf, int len)
+{
+	int i = 0, count = 0;
+	for (i = 0; i < len; ++i)
+	{
+		printf("%02x ", (uint8_t)buf[i]);
+		count++;
+		if(count % 8 == 0)
+			printf("    ");
+		if(count % 16 == 0)
+			printf("\n");
+	}
+	printf("\n");
+}
+
+
 
 int main(int argc, char* argv[])
 {
@@ -172,7 +188,8 @@ int main(int argc, char* argv[])
    GetKeyFromString(  keyRet,  pubkeyRet,  privkey,   pubkeystr ) ;
    cout << "privkey is " << privkey << endl << "pubkey is " << pubkeystr << endl << endl;
    strmessage = argv[argc - 1];
-   cout << "sign msg is " << strmessage << endl << endl;
+   cout << "sign msg is " << strmessage << endl;
+   showbuf(strmessage.c_str(), strmessage.length());
    //strmessage = "a0ad00a000000a0000000alert";
    //cout << "sign msg is " << strmessage << endl;
     
