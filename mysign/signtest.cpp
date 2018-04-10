@@ -116,6 +116,7 @@ int main(int argc, char* argv[])
    }*/
    if(argc != 4)
    {
+   		cout << "arg number is " << argc << endl;
    		cout << "./mysign 0 strmessage ***** main" << endl << "./mysign 1 strmessage ***** test" <<endl;
    }
 
