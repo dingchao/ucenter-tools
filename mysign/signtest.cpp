@@ -114,13 +114,14 @@ int main(int argc, char* argv[])
        cout<< "test :"  <<endl;
        strcpy(netparams,"test");
    }*/
-   if(argc != 4)
+   if(argc < 3)
    {
    		cout << "arg number is " << argc << endl;
    		cout << "./mysign 0 strmessage ***** main" << endl << "./mysign 1 strmessage ***** test" <<endl;
+		return 0;
    }
 
-   if(argv[2] == 0)
+   if(argv[argc - 2] == 0)
    {
        cout<< "main :"  <<endl;
        strcpy(netparams,"main");
@@ -134,8 +135,8 @@ int main(int argc, char* argv[])
    Secp256k1Init ecc(netparams);
 
 
-   bool testret = testverify2();   
-   testret = testverify();   
+   /*bool testret = testverify2(); */  
+   /*testret = testverify();*/
   
    /*if(argc>1)
    {
@@ -154,7 +155,7 @@ int main(int argc, char* argv[])
    CPubKey pubkeyRet;
    GetKeyFromString(  keyRet,  pubkeyRet,  privkey,   pubkeystr ) ;
    cout << "privkey is " << privkey << endl << "pubkey is " << pubkeystr << endl;
-   strmessage = argv[3];
+   strmessage = argv[argc - 1];
    cout << "sign msg is " << strmessage << endl;
    //strmessage = "a0ad00a000000a0000000alert";
    //cout << "sign msg is " << strmessage << endl;
