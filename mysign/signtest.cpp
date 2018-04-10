@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
    string strErrorRet;
    messSign.SignMessage(strmessage, vchSigRet, keyRet);
    cout<<"vchsigret "<< HexStr(vchSigRet)<<endl;
-   showbuf(vchSigRet.begin(), vchSigRet.size());
+   showbuf(vchSigRet[0], vchSigRet.size());
 
    CPubKey pubkeyVery;
 
