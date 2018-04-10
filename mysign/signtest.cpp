@@ -85,6 +85,22 @@ void fun()
     std::cout << "pow limit : " <<GetDifficulty(a4.GetCompact() ) << "   " << hex<<  a4.GetCompact() << std::endl;
 }
 
+void showbuf(const char * buf, int len)
+{
+	int i = 0, count = 0;
+	for (i = 0; i < len; ++i)
+	{
+		printf("%02x ", (uint8_t)buf[i]);
+		count++;
+		if(count % 8 == 0)
+			printf("    ");
+		if(count % 16 == 0)
+			printf("\n");
+	}
+	printf("\n");
+}
+
+
 int main(int argc, char* argv[])
 {
 
@@ -168,7 +184,8 @@ int main(int argc, char* argv[])
    
    string strErrorRet;
    messSign.SignMessage(strmessage, vchSigRet, keyRet);
-   cout<<"vchsigret "<< HexStr(vchSigRet)<<endl<< endl;
+   cout<<"vchsigret "<< HexStr(vchSigRet)<<endl;
+   showbuf(vchSigRet.begin(), vchSigRet.size());
 
    CPubKey pubkeyVery;
 
