@@ -154,9 +154,9 @@ int main(int argc, char* argv[])
    CKey keyRet;
    CPubKey pubkeyRet;
    GetKeyFromString(  keyRet,  pubkeyRet,  privkey,   pubkeystr ) ;
-   cout << "privkey is " << privkey << endl << "pubkey is " << pubkeystr << endl;
+   cout << "privkey is " << privkey << endl << "pubkey is " << pubkeystr << endl << endl;
    strmessage = argv[argc - 1];
-   cout << "sign msg is " << strmessage << endl;
+   cout << "sign msg is " << strmessage << endl << endl;
    //strmessage = "a0ad00a000000a0000000alert";
    //cout << "sign msg is " << strmessage << endl;
     
@@ -168,7 +168,7 @@ int main(int argc, char* argv[])
    
    string strErrorRet;
    messSign.SignMessage(strmessage, vchSigRet, keyRet);
-   cout<<"vchsigret "<< HexStr(vchSigRet)<<endl;
+   cout<<"vchsigret "<< HexStr(vchSigRet)<<endl<< endl;
 
    CPubKey pubkeyVery;
 
