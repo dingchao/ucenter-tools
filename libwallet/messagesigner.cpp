@@ -183,7 +183,7 @@ bool CHashSigner::VerifyHash(const uint256& hash, const CPubKey pubkey, const st
     }
 
     if(pubkeyFromSig.GetID() != pubkey.GetID()) {
-        strErrorRet = strprintf("Keys don't match: pubkey=%s, pubkeyFromSig=%s, hash=%s, vchSig=%s",
+        strErrorRet = strprintf("Keys don't match: pubkey=%s,\npubkeyFromSig=%s,\nhash=%s,\nvchSig=%s",
                     pubkey.GetID().ToString(), pubkeyFromSig.GetID().ToString(), hash.ToString(),
                     EncodeBase64(&vchSig[0], vchSig.size()));
         return false;
