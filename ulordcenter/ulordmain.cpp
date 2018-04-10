@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
         server.setThreadNum(nThread);
      }
      server.start();
+     initreaddb();
      loop.loop();
    }
     

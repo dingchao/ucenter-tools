@@ -33,12 +33,12 @@ bool FindFromMasterNodeMemory( std::string masteraddr, std::vector<CMstNodeData>
    if(it != g_mstdatamap.end())
    {
        CMstNodeData mstNodeData  = it->second;
-       if(mstNodeData._time > g_curtime  - TIME_INTERVAL) 
+       //if(mstNodeData._time > g_curtime  - TIME_INTERVAL) 
        {
           vecnode.push_back(it->second);
           return true;
        }
-       else // 超时 
+       //else // 超时 
        {
           g_mstdatamap.erase(it);
           return false;
@@ -55,23 +55,38 @@ void   AddMasterNodeMemory(std::string masteraddr ,int  invalidflag  )
     mstnode._validflag= invalidflag; // 0 is invalid;  1 is valid
     mstnode._time = g_curtime; 
 
-    g_mstdatamap.insert(pair<std::string,CMstNodeData>(masteraddr,mstnode ));
-    
+    std::map<std::string, CMstNodeData>::iterator it  =   g_mstdatamap.find(masteraddr);
+   //   加个时间判断 超过一定的时间 就重新度数据库 
+   if(it != g_mstdatamap.end())
+   {
+      it->second._validflag=invalidflag;
+   }
+   else
+   {
+      g_mstdatamap.insert(pair<std::string,CMstNodeData>(masteraddr,mstnode ));
+   }  
 }
 
 void   AddMasterNodeMemory(std::string masteraddr , CMstNodeData &  node  )
 {
-    node._time = g_curtime;
-    g_mstdatamap.insert(pair<std::string,CMstNodeData>(masteraddr,node )); 
-    
+   node._time = g_curtime;
+   std::map<std::string, CMstNodeData>::iterator it  =   g_mstdatamap.find(masteraddr);
+   if(it != g_mstdatamap.end())
+   {
+      it->second._validflag=node._validflag; 
+   }
+   else   
+   {
+       g_mstdatamap.insert(pair<std::string,CMstNodeData>(masteraddr,node )); 
+   } 
 }
-// sign  addr & timestamps
+// sign  addr
 std::string  SignMessage( std::string addr, int64_t timeStamps)
 {
    CKey keyRet;
    CPubKey pubkeyRet;
    GetKeyFromString(  keyRet,  pubkeyRet,  g_privkeystr,   g_pubkeystr ) ;
-
+    
    CPubKey testKey(ParseHex(g_pubkeystr));
 
    cout<< "Pubkey: str=" << g_pubkeystr << endl
@@ -170,6 +185,22 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
     return 0;
 }
 
+void initreaddb()
+{
+  std::vector<CMstNodeData> vecnode;
+  ConnPool* pPool =  ConnPool::GetInstance();
+  {
+     sql::Connection *  pConn = pPool->GetConnection();
+     if(pConn==NULL)
+     {
+        cout << "error  pConn  get is null "   << endl;
+        return ;
+     }
+     ReadAllNodeToNet(pConn, vecnode );
+     pPool->ReleaseConnection(pConn);
+
+  }
+}
 //    std::cin.get();  
 void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
 {
@@ -194,6 +225,7 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
         mstnode._hostname  = resultSet->getString(4);
         mstnode._hostip   = resultSet->getString(5);
         vecnode.push_back(mstnode);
+        AddMasterNodeMemory(mstnode._masteraddr, mstnode  );
         cout<<"master addr  "<<  mstnode._masteraddr <<"hostname " << mstnode._hostname << "hostip  "<< mstnode._hostip <<endl;
         i++;
     }
