@@ -85,7 +85,7 @@ void fun()
     std::cout << "pow limit : " <<GetDifficulty(a4.GetCompact() ) << "   " << hex<<  a4.GetCompact() << std::endl;
 }
 
-void showbuf(const std::vector<unsigned char>buf)
+void showbuf(const std::vector<unsigned char> & buf)
 {
 	int i = 0, count = 0;
 	for (i = 0; i < buf.size(); ++i)
