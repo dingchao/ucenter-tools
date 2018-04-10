@@ -104,7 +104,22 @@ int main(int argc, char* argv[])
    cout<<" TmpDate  "<<  szTmpDate<< " Time   " << szTmpTime << endl; 
    
    char  netparams[20]=""; 
-   if( argc>2  )
+   /**if( argc>2  )
+   {
+       cout<< "main :"  <<endl;
+       strcpy(netparams,"main");
+   }
+   else
+   {
+       cout<< "test :"  <<endl;
+       strcpy(netparams,"test");
+   }*/
+   if(argc != 2)
+   {
+   		cout << "./mysign 0 strmessage ***** main" << endl << "./mysign 1 strmessage ***** test" <<endl;
+   }
+
+   if(argv[0] == 0)
    {
        cout<< "main :"  <<endl;
        strcpy(netparams,"main");
@@ -121,7 +136,7 @@ int main(int argc, char* argv[])
    bool testret = testverify2();   
    testret = testverify();   
   
-   if(argc>1)
+   /*if(argc>1)
    {
        string newpriv, newpub ; 
        NewKeyString( newpriv, newpub);
@@ -132,11 +147,13 @@ int main(int argc, char* argv[])
        bitAddress.Set(addrpubkey.GetID());
        cout<< "pubaddr:" << bitAddress.ToString()<<endl;
        return 0; 
-   }
+   }*/
 
    CKey keyRet;
    CPubKey pubkeyRet;
-   GetKeyFromString(  keyRet,  pubkeyRet,  privkey,   pubkeystr ) ;    
+   GetKeyFromString(  keyRet,  pubkeyRet,  privkey,   pubkeystr ) ;
+   strmessage = argv[1];
+   cout << "sign msg is " << strmessage << endl;
     
    CMessageSigner messSign;
    CMessageSigner messVery;     
@@ -163,7 +180,7 @@ int main(int argc, char* argv[])
    }
    //char * p; 
    //char szBuf[128];
-   system("pause");
+   //system("pause");
 
    return 0;
 }
