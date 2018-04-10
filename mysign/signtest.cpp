@@ -114,12 +114,12 @@ int main(int argc, char* argv[])
        cout<< "test :"  <<endl;
        strcpy(netparams,"test");
    }*/
-   if(argc != 2)
+   if(argc != 4)
    {
    		cout << "./mysign 0 strmessage ***** main" << endl << "./mysign 1 strmessage ***** test" <<endl;
    }
 
-   if(argv[0] == 0)
+   if(argv[2] == 0)
    {
        cout<< "main :"  <<endl;
        strcpy(netparams,"main");
@@ -152,8 +152,11 @@ int main(int argc, char* argv[])
    CKey keyRet;
    CPubKey pubkeyRet;
    GetKeyFromString(  keyRet,  pubkeyRet,  privkey,   pubkeystr ) ;
-   strmessage = argv[1];
+   cout << "privkey is " << privkey << endl << "pubkey is " << pubkeystr << endl;
+   strmessage = argv[3];
    cout << "sign msg is " << strmessage << endl;
+   //strmessage = "a0ad00a000000a0000000alert";
+   //cout << "sign msg is " << strmessage << endl;
     
    CMessageSigner messSign;
    CMessageSigner messVery;     
