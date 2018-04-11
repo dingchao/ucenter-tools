@@ -107,7 +107,7 @@ add_subdirectory(walletd)
 #add_subdirectory(filetodb) 
 add_subdirectory(ulordcenter) 
 add_subdirectory(unode) 
-
+add_subdirectory(str2hex)
 
 
 
