@@ -33,12 +33,17 @@ bool FindFromMasterNodeMemory( std::string masteraddr, std::vector<CMstNodeData>
    if(it != g_mstdatamap.end())
    {
        CMstNodeData mstNodeData  = it->second;
-       //if(mstNodeData._time > g_curtime  - TIME_INTERVAL) 
+	   if(CMstNodeData._validflag <= 0)
+	   {
+	   	  g_mstdatamap.erase(it);
+          return false;
+	   }
+       if(mstNodeData._time > g_curtime  - TIME_INTERVAL) 
        {
           vecnode.push_back(it->second);
           return true;
        }
-       //else // 超时 
+       else // 超时 
        {
           g_mstdatamap.erase(it);
           return false;
@@ -175,7 +180,7 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
     oa<<mstres; 
     for(auto node : vecnode) 
     {
-    	cout << "add Masternode " << node._masteraddr << endl << "valid flag = " << node._validflag << endl;
+    	cout << "write in msg Masternode " << node._masteraddr << endl << "valid flag = " << node._validflag << endl;
         oa << node;//序列化到一个ostringstream里面  
     } 
     std::string content = os.str();//content保存了序列化后的数据。  
@@ -227,7 +232,7 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
         mstnode._hostip   = resultSet->getString(5);
 		mstnode._validflag = resultSet->getInt(11);
         vecnode.push_back(mstnode);
-        AddMasterNodeMemory(mstnode._masteraddr, mstnode  );
+        AddMasterNodeMemory(mstnode._masteraddr, mstnode._validflag);
         cout<<"master addr  "<<  mstnode._masteraddr <<"hostname " << mstnode._hostname << "hostip  "<< mstnode._hostip <<endl;
         i++;
     }
