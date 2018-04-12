@@ -89,9 +89,9 @@ std::string  SignMessage( std::string addr, int64_t timeStamps)
     
    CPubKey testKey(ParseHex(g_pubkeystr));
 
-   cout<< "Pubkey: str=" << g_pubkeystr << endl
+   /*cout<< "Pubkey: str=" << g_pubkeystr << endl
    		<< "center key=" << pubkeyRet.GetID().ToString() << endl
-   		<< "ulord key=" << testKey.GetID().ToString() << endl;
+   		<< "ulord key=" << testKey.GetID().ToString() << endl;*/
 
     CMessageSigner messSign;
     CMessageSigner messVery;
@@ -100,7 +100,7 @@ std::string  SignMessage( std::string addr, int64_t timeStamps)
     std::vector<unsigned char> vchkey;
 
     messSign.SignMessage(addr, timeStamps, vchSigRet, keyRet);
-    cout<<"vchsigret "<< HexStr(vchSigRet)<<endl<<"vchsig "<< EncodeBase64(&vchSigRet[0], vchSigRet.size())<<endl<<"pubkey "<<pubkeyRet.GetID().ToString()<<endl;
+    //cout<<"vchsigret "<< HexStr(vchSigRet)<<endl<<"vchsig "<< EncodeBase64(&vchSigRet[0], vchSigRet.size())<<endl<<"pubkey "<<pubkeyRet.GetID().ToString()<<endl;
     return HexStr(vchSigRet);
 }
 
@@ -175,6 +175,7 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
     oa<<mstres; 
     for(auto node : vecnode) 
     {
+    	cout << "add Masternode " << node._masteraddr << endl << "valid flag = " << node._validflag << endl;
         oa << node;//序列化到一个ostringstream里面  
     } 
     std::string content = os.str();//content保存了序列化后的数据。  
