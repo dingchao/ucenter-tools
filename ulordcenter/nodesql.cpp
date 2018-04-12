@@ -25,7 +25,7 @@ std::string g_pubkeystr;
 
 std::map<std::string , CMstNodeData> g_mstdatamap;
 unsigned int  g_curtime;
-const int   TIME_INTERVAL = 120;
+const unsigned int   TIME_INTERVAL = 120;
 bool FindFromMasterNodeMemory( std::string masteraddr, std::vector<CMstNodeData> & vecnode  )
 {
     std::map<std::string, CMstNodeData>::iterator it  =   g_mstdatamap.find(masteraddr);
@@ -33,7 +33,7 @@ bool FindFromMasterNodeMemory( std::string masteraddr, std::vector<CMstNodeData>
    if(it != g_mstdatamap.end())
    {
        CMstNodeData mstNodeData  = it->second;
-	   if(CMstNodeData._validflag <= 0)
+	   if(mstNodeData._validflag <= 0)
 	   {
 	   	  g_mstdatamap.erase(it);
           return false;
@@ -99,7 +99,7 @@ std::string  SignMessage( std::string addr, int64_t timeStamps)
    		<< "ulord key=" << testKey.GetID().ToString() << endl;*/
 
     CMessageSigner messSign;
-    CMessageSigner messVery;
+    //CMessageSigner messVery;
 
     std::vector<unsigned char> vchSigRet;
     std::vector<unsigned char> vchkey;

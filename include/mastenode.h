@@ -160,7 +160,7 @@ public:
     std::string _hostname;  // 
     std::string _hostip;    // 
     int         _validflag; //
-    int         _time;
+    unsigned int _time;
     long long   _llAmount;  // 
     std::string _text;  
 };  
