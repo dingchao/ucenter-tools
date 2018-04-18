@@ -426,7 +426,6 @@ string  dumpprivkey(const string & params, string & strpubkey, string & unCompre
     CPubKey  pubkey= vchSecret.GetPubKey(); 
     strpubkey = HexStr(pubkey);
 	unCompressedPubKey = HexStr(vchSecret.GetUnCompressedsPubKey());
-	cout << endl << HexStr(vchSecret.GetUnCompressedsPubKey()) << endl;
     return CBitcoinSecret(vchSecret).ToString();
 }
 
