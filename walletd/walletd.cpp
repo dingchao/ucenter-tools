@@ -29,6 +29,9 @@ void printhelp()
 
 }
 
+void VerifyKey()
+{
+}
 
 int main(int argc, char* argv[])
 {
@@ -94,7 +97,7 @@ int main(int argc, char* argv[])
    
     exitwallet();
    
-   system("pause");
+   //system("pause");
 
 
    return 0 ;

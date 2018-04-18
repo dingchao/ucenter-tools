@@ -143,6 +143,8 @@ CPubKey CWallet::GenerateNewKey()
     CPubKey pubkey = secret.GetPubKey();
     assert(secret.VerifyPubKey(pubkey));
 
+	cout << "uncomoress pub key: " << HexStr(secret.GetUnCompressedsPubKey()) << endl;
+
     // Create new metadata
     int64_t nCreationTime = GetTime();
     mapKeyMetadata[pubkey.GetID()] = CKeyMetadata(nCreationTime);
