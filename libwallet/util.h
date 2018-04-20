@@ -135,6 +135,9 @@ void OpenDebugLog();
 void ShrinkDebugFile();
 void runCommand(const std::string& strCommand);
 
+void ReadFile(std::map<std::string, std::string>& mapSettingsRet, std::map<std::string, std::vector<std::string> >& mapMultiSettingsRet, const std::string & strfile);
+
+
 inline bool IsSwitchChar(char c)
 {
 #ifdef WIN32

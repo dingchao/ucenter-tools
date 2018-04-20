@@ -487,7 +487,7 @@ boost::filesystem::path GetDefaultDataDir()
     // Unix: ~/.bitcoin
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "Qtcoin";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "ucenter";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -497,10 +497,10 @@ boost::filesystem::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef MAC_OSX
     // Mac
-    return pathRet / "Library/Application Support/Qtcoin";
+    return pathRet / "Library/Application Support/ucenter";
 #else
     // Unix
-    return pathRet / ".qtcoin";
+    return pathRet / ".ucenter";
 #endif
 #endif
 }
@@ -554,6 +554,14 @@ boost::filesystem::path GetConfigFile()
     return pathConfigFile;
 }
 
+boost::filesystem::path GetFile(const std::string & filename)
+{
+    boost::filesystem::path pathFile(filename);
+    if (!pathFile.is_complete())
+        pathFile = GetDefaultDataDir() / pathFile;
+
+    return pathFile;
+}
 void ReadConfigFile(map<string, string>& mapSettingsRet,
                     map<string, vector<string> >& mapMultiSettingsRet)
 {
@@ -576,6 +584,34 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
     }
     // If datadir is changed in .conf file:
     ClearDatadirCache();
+}
+
+void ReadFile(map<string, string>& mapSettingsRet,
+              map<string, vector<string> >& mapMultiSettingsRet,
+              const std::string & strfile)
+{
+    boost::filesystem::ifstream streamFile(GetFile(strfile));
+    if (!streamFile.good()){
+        // Create empty ulord.conf if it does not excist
+        FILE* configFile = fopen(GetConfigFile().string().c_str(), "a");
+        if (configFile != NULL)
+            fclose(configFile);
+        return; // Nothing to read, so just return
+    }
+
+    set<string> setOptions;
+    setOptions.insert("*");
+
+    for (boost::program_options::detail::config_file_iterator it(streamFile, setOptions), end; it != end; ++it)
+    {
+        // Don't overwrite existing settings so command line settings override ulord.conf
+        string strKey = string("-") + it->string_key;
+        string strValue = it->value[0];
+        InterpretNegativeSetting(strKey, strValue);
+        if (mapSettingsRet.count(strKey) == 0)
+            mapSettingsRet[strKey] = strValue;
+        mapMultiSettingsRet[strKey].push_back(strValue);
+    }
 }
 
 #ifndef WIN32
