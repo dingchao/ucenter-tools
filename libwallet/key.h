@@ -119,6 +119,7 @@ public:
      * This is expensive.
      */
     CPubKey GetPubKey() const;
+	CPubKey CKey::Get2TypePubKey(CPubKey & uncompressedKey) const;
 	CPubKey GetUnCompressedsPubKey() const;
 
     /**
