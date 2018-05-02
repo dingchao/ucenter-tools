@@ -21,7 +21,7 @@ using namespace std;
 void printhelp()
 {
        cout<<"1  help  :"  <<endl;
-       cout<<"2  getnewaddreess"<<endl;
+       cout<<"2  getnewaddress"<<endl;
        cout<<"3  dumpwallet"<<endl;
        cout<<"4  dumpprivkey  address"<<endl;
        cout<<"5  importprivkey prikey "<<endl;
