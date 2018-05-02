@@ -1,3 +1,5 @@
+Prepare:
+
 cmake --version
 cd  ucenter
 cmake   . 
@@ -14,3 +16,10 @@ secpk1 support recovery
 ./configure --enable-debug --disable-shared --with-pic --with-bignum=no --enable-module-recovery
 make & make install
 
+Build:
+
+git clone https://github.com/bicliu/ucenter-tools.git
+cd ucenter-tools
+mkdir build
+cmake ..
+make
