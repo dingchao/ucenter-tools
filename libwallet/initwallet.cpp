@@ -405,7 +405,7 @@ bool  importelectrumwallet(const string& params)
 }
 
 //            "dumpprivkey \"dashaddress\"\n"
-string  dumpprivkey(const string & params, string & strpubkey, string & unCompressedPubKey)
+string  dumpprivkey(const string & params, string & strpubkey)
 {
     
     LOCK2(cs_main, pwalletMain->cs_wallet);
