@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
        string  straddr(argv[2]);
 	   string unCompressedKey;
        string privkey= dumpprivkey(straddr,pubkey,unCompressedKey);
-       cout<<"dump privkey  "<<straddr<<" priv key "  << privkey  <<"  pub key  "<< pubkey   <<endl << "unCompressed " << unCompressedKey << endl;
+       cout<<"dump privkey  "<<straddr<<" priv key "  << privkey  <<"  pub key  "<< pubkey   <<endl;
     }   
     else if(stropt==string("importprivkey") )
     {

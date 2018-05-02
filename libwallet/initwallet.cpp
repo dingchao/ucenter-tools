@@ -423,11 +423,11 @@ string  dumpprivkey(const string & params, string & strpubkey, string & unCompre
     if (!pwalletMain->GetKey(keyID, vchSecret))
         throw JSONRPCError(RPC_WALLET_ERROR, "Private key for address " + strAddress + " is not known");
 
-    //CPubKey  pubkey= vchSecret.GetPubKey();
-    CPubKey  uncomKey;
-    CPubKey  pubkey= vchSecret.Get2TypePubKey(uncomKey);
+    CPubKey  pubkey= vchSecret.GetPubKey();
+    //CPubKey  uncomKey;
+    //CPubKey  pubkey= vchSecret.Get2TypePubKey(uncomKey);
     strpubkey = HexStr(pubkey);
-	unCompressedPubKey = HexStr(uncomKey);
+	//unCompressedPubKey = HexStr(uncomKey);
     return CBitcoinSecret(vchSecret).ToString();
 }
 
