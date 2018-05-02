@@ -425,7 +425,7 @@ string  dumpprivkey(const string & params, string & strpubkey, string & unCompre
 
     //CPubKey  pubkey= vchSecret.GetPubKey();
     CPubKey  uncomKey;
-    CPubKey  pubkey= vchSecret.GetPubKey(uncomKey);
+    CPubKey  pubkey= vchSecret.Get2TypePubKey(uncomKey);
     strpubkey = HexStr(pubkey);
 	unCompressedPubKey = HexStr(uncomKey);
     return CBitcoinSecret(vchSecret).ToString();
