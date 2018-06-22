@@ -19,18 +19,19 @@ sudo apt install libmysqlclient-dev
 ```
 
 secpk1 support recovery
+```bash
 ./autogen.sh
 ./configure --enable-debug --disable-shared --with-pic --with-bignum=no --enable-module-recovery
 make & make install
-
+```
 Build:
-
+```bash
 git clone https://github.com/bicliu/ucenter-tools.git
 cd ucenter-tools
 mkdir build
 cmake ..
 make
-
+```
 
 使用说明：
 1.ulordcenter
