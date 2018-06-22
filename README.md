@@ -11,6 +11,11 @@ LookupIntern
 sql need setup
 apt-get install  libmysqlcppconn-dev
 
+install mysql
+sudo apt-get install mysql-server
+sudo apt install mysql-client
+sudo apt install libmysqlclient-dev
+
 secpk1 support recovery
 ./autogen.sh
 ./configure --enable-debug --disable-shared --with-pic --with-bignum=no --enable-module-recovery
