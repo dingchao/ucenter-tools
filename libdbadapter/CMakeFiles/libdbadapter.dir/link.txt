@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../lib/libdbadapter.a  CMakeFiles/libdbadapter.dir/connection_pool.cpp.o CMakeFiles/libdbadapter.dir/Utils.cc.o CMakeFiles/libdbadapter.dir/MySQLConnection.cc.o
-/usr/bin/ranlib ../lib/libdbadapter.a

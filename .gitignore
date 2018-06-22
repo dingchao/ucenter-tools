@@ -7,3 +7,5 @@ cmake-build-debug/
 /patches/
 /data/
 /src/bitcoin/
+CMakeFiles/
+cmake_install.cmake
