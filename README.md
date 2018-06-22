@@ -16,6 +16,28 @@ install mysql
 sudo apt-get install mysql-server
 sudo apt install mysql-client
 sudo apt install libmysqlclient-dev
+sudo apt-get install  libmysqlcppconn-dev
+```
+create table
+```bash
+create table ulord_master (
+    id_index int(4) NOT NULL auto_increment PRIMARY KEY,
+    addr varchar(50) NOT NULL,
+    amount bigint(20) DEFAULT '10000',
+    txid varchar(100) NOT NULL UNIQUE,
+    outid int(4) NOT NULL,
+    hostname varchar(50) NOT NULL UNIQUE KEY,
+    ip varchar(50) NOT NULL UNIQUE,
+    disksize int(11) NOT NULL DEFAULT '0',
+    netsize int(11) NOT NULL DEFAULT '0',
+    cpusize int(11) NOT NULL DEFAULT '0',
+    ramsize int(11) NOT NULL DEFAULT '0',
+    score int(11) NOT NULL DEFAULT '0',
+    validflag int(11) NOT NULL DEFAULT '0',
+    revser1 varchar(50) DEFAULT NULL,
+    revser2 varchar(50) DEFAULT NULL,
+    revser3 varchar(50) DEFAULT NULL
+    );
 ```
 
 secpk1 support recovery

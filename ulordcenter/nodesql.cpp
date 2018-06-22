@@ -227,10 +227,10 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
     sql::ResultSet * resultSet =  stmt->executeQuery(sqlBuf);
     int i = 0;
     while (resultSet->next()) {
-        mstnode._masteraddr = resultSet->getString(1 ); // ultSet->getString("addr" )
-        mstnode._hostname  = resultSet->getString(4);
-        mstnode._hostip   = resultSet->getString(5);
-		mstnode._validflag = resultSet->getInt(11);
+        mstnode._masteraddr = resultSet->getString(2); // ultSet->getString("addr" )
+        mstnode._hostname  = resultSet->getString(6);
+        mstnode._hostip   = resultSet->getString(7);
+		mstnode._validflag = resultSet->getInt(13);
         vecnode.push_back(mstnode);
         AddMasterNodeMemory(mstnode._masteraddr, mstnode._validflag);
         cout<<"master addr  "<<  mstnode._masteraddr <<"hostname " << mstnode._hostname << "hostip  "<< mstnode._hostip <<endl;
@@ -260,9 +260,11 @@ void  ReadMasterNodeToNet(sql::Connection * con, std::string nodeaddr,std::vecto
     }
     stmt->execute("SET CHARSET GB2312");
     stmt->execute("USE mysql");
-/*addr                char(50) not null primary key,
+/*id_index            int(4) not null primary key,
+addr                  char(50) not null,
 amount                bigint NOT NULL DEFAULT '0',
-txid                  char(50) null,
+txid                  char(50) NOT NULL,
+outid				  int(4) NOT NULL,
 hostname              char(50) NULL DEFAULT ' ',
 ip                    char(50) NULL DEFAULT ' ',
 disksize              int NOT NULL DEFAULT '0',
@@ -276,10 +278,10 @@ validflag             int NOT NULL DEFAULT '0',
     sql::ResultSet * resultSet =  stmt->executeQuery(sqlBuf);
     int i = 0;
     while (resultSet->next()) {
-        mstnode._masteraddr = resultSet->getString(1 ); // ultSet->getString("addr" )
-        mstnode._hostname  = resultSet->getString(4);  
-        mstnode._hostip   = resultSet->getString(5);
-		mstnode._validflag = resultSet->getInt(11); 
+        mstnode._masteraddr = resultSet->getString(2 ); // ultSet->getString("addr" )
+        mstnode._hostname  = resultSet->getString(6);  
+        mstnode._hostip   = resultSet->getString(7);
+		mstnode._validflag = resultSet->getInt(13); 
         cout<<"master addr "<<  mstnode._masteraddr <<" hostname " << mstnode._hostname << " hostip "<< mstnode._hostip << " validflag " << mstnode._validflag <<endl;
         vecnode.push_back(mstnode);
         i++;
