@@ -100,14 +100,14 @@ endif()
 add_subdirectory(libqtutils)
 add_subdirectory(libdbadapter)
 add_subdirectory(libwallet)
-#add_subdirectory(mysign)
+add_subdirectory(mysign)
 #add_subdirectory(claimtest)
-#add_subdirectory(walletd)
+add_subdirectory(walletd)
 #add_subdirectory(tblmgrt) 
 add_subdirectory(filetodb) 
 add_subdirectory(ulordcenter) 
 #add_subdirectory(unode) 
-#add_subdirectory(str2hex)
+add_subdirectory(str2hex)
 
 
 

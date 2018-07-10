@@ -233,7 +233,7 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
 		mstnode._validflag = resultSet->getInt(13);
         vecnode.push_back(mstnode);
         AddMasterNodeMemory(mstnode._masteraddr, mstnode._validflag);
-        cout<<"master addr  "<<  mstnode._masteraddr <<"hostname " << mstnode._hostname << "hostip  "<< mstnode._hostip <<endl;
+        cout<<"master addr  "<<  mstnode._masteraddr <<" hostname " << mstnode._hostname << " hostip  "<< mstnode._hostip <<endl;
         i++;
     }
 
