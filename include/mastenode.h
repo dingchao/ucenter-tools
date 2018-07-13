@@ -69,6 +69,9 @@ public:
     int             _msgversion;
     int             _num;
     std::string     _verfyflag;
+	
+	std::string _certificate; //证书
+	int64_t _validTimes;  //注册有效时间
     std::string     _signstr;
     friend class boost::serialization::access;
 
@@ -121,7 +124,9 @@ private:
         ar & _hostname;  
         ar & _hostip;  
         ar & _validflag;
-        //ar & _llAmount;  
+        //ar & _llAmount; 
+        ar & _validtime;
+		ar & _certificate;
     }  
 /*addr char(50) not null primary key,
 amount bigint NOT NULL DEFAULT '0',
@@ -151,6 +156,8 @@ public:
         _hostname  = b._hostname;
         _hostip    = b._hostip;
         _validflag = b._validflag;
+		_validtime = b._validtime;
+		_certificate = b._certificate;
         return * this;
     }
 public:  
@@ -160,6 +167,8 @@ public:
     std::string _hostname;  // 
     std::string _hostip;    // 
     int         _validflag; //
+    int64_t _validtime;  //到期日期
+    str::string _certificate; //证书
     unsigned int _time;
     long long   _llAmount;  // 
     std::string _text;  

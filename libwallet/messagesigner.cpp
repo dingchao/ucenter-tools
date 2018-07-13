@@ -160,6 +160,18 @@ bool CMessageSigner::SignMessage(const std::string strMessage, const int64_t tim
 	return CHashSigner::SignHash(ss.GetHash(), key, vchSigRet);
 }
 
+bool CMessageSigner::SignMessage(const std::string txid, const int32_t index, const std::string strMessage, const int64_t validTimes, std::vector<unsigned char>& vchSigRet, const CKey key)
+{
+    CHashWriter ss(SER_GETHASH, 0);
+    ss << strMessageMagic;
+	ss << txid;
+    ss << index;
+	ss << strMessage;
+	ss << validTimes;
+	
+	return CHashSigner::SignHash(ss.GetHash(), key, vchSigRet);
+}
+
 bool CMessageSigner::VerifyMessage(const CPubKey pubkey, const std::vector<unsigned char>& vchSig, const std::string strMessage, std::string& strErrorRet)
 {
     CHashWriter ss(SER_GETHASH, 0);

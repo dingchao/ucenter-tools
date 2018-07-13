@@ -110,6 +110,26 @@ std::string  SignMessage( std::string addr, int64_t timeStamps)
 }
 
 
+// sign for register certificate
+std::string  SignMessage( std::string txid, int32_t index, std::string addr, int64_t validdate,)
+{
+   CKey keyRet;
+   CPubKey pubkeyRet;
+   GetKeyFromString(  keyRet,  pubkeyRet,  g_privkeystr,   g_pubkeystr ) ;
+    
+   CPubKey testKey(ParseHex(g_pubkeystr));
+
+    CMessageSigner messSign;
+
+    std::vector<unsigned char> vchSigRet;
+    std::vector<unsigned char> vchkey;
+
+    messSign.SignMessage(txid, index, addr, validdate, vchSigRet, keyRet);
+
+    return HexStr(vchSigRet);
+}
+
+
 int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthHeaderCodec& codec )
 {
     // const TcpConnectionPtr  tcpcli;
@@ -174,7 +194,7 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
 
     mstnoderes  mstres(mstquest._msgversion);
     mstres._num= vecnode.size();
-    mstres._signstr = SignMessage(vecnode[0]._masteraddr, mstquest._timeStamps);
+    mstres._signstr = SignMessage(vecnode[0]._masteraddr, mstquest._timeStamps); 
     std::ostringstream os;  
     boost::archive::binary_oarchive oa(os);  
     oa<<mstres; 
@@ -231,9 +251,11 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
         mstnode._hostname  = resultSet->getString(6);
         mstnode._hostip   = resultSet->getString(7);
 		mstnode._validflag = resultSet->getInt(13);
+		mstnode._validtime = resultSet->getInt(14);
+		mstnode._certificate = resultSet->getstring(15);
         vecnode.push_back(mstnode);
         AddMasterNodeMemory(mstnode._masteraddr, mstnode._validflag);
-        cout<<"master addr  "<<  mstnode._masteraddr <<"hostname " << mstnode._hostname << "hostip  "<< mstnode._hostip <<endl;
+        cout<<"master addr  "<<  mstnode._masteraddr <<"hostname " << mstnode._hostname << "hostip  "<< mstnode._hostip <<"validate "<<mstnode._validtime<<endl;
         i++;
     }
 
@@ -282,6 +304,8 @@ validflag             int NOT NULL DEFAULT '0',
         mstnode._hostname  = resultSet->getString(6);  
         mstnode._hostip   = resultSet->getString(7);
 		mstnode._validflag = resultSet->getInt(13); 
+		mstnode._validtime = resultSet->getInt(14);
+		mstnode._certificate = resultSet->getstring(15);
         cout<<"master addr "<<  mstnode._masteraddr <<" hostname " << mstnode._hostname << " hostip "<< mstnode._hostip << " validflag " << mstnode._validflag <<endl;
         vecnode.push_back(mstnode);
         i++;
