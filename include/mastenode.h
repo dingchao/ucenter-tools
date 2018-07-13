@@ -168,7 +168,7 @@ public:
     std::string _hostip;    // 
     int         _validflag; //
     int64_t _validtime;  //到期日期
-    str::string _certificate; //证书
+    std::string _certificate; //证书
     unsigned int _time;
     long long   _llAmount;  // 
     std::string _text;  
