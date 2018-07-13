@@ -305,7 +305,7 @@ validflag             int NOT NULL DEFAULT '0',
         mstnode._hostip   = resultSet->getString(7);
 		mstnode._validflag = resultSet->getInt(13); 
 		mstnode._validtime = resultSet->getInt(14);
-		mstnode._certificate = resultSet->getstring(15);
+		mstnode._certificate = resultSet->getString(15);
         cout<<"master addr "<<  mstnode._masteraddr <<" hostname " << mstnode._hostname << " hostip "<< mstnode._hostip << " validflag " << mstnode._validflag <<endl;
         vecnode.push_back(mstnode);
         i++;
