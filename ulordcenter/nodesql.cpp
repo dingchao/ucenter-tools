@@ -111,7 +111,7 @@ std::string  SignMessage( std::string addr, int64_t timeStamps)
 
 
 // sign for register certificate
-std::string  SignMessage( std::string txid, int32_t index, std::string addr, int64_t validdate,)
+std::string  SignMessage( std::string txid, int32_t index, std::string addr, int64_t validdate)
 {
    CKey keyRet;
    CPubKey pubkeyRet;
@@ -252,7 +252,7 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
         mstnode._hostip   = resultSet->getString(7);
 		mstnode._validflag = resultSet->getInt(13);
 		mstnode._validtime = resultSet->getInt(14);
-		mstnode._certificate = resultSet->getstring(15);
+		mstnode._certificate = resultSet->getString(15);
         vecnode.push_back(mstnode);
         AddMasterNodeMemory(mstnode._masteraddr, mstnode._validflag);
         cout<<"master addr  "<<  mstnode._masteraddr <<"hostname " << mstnode._hostname << "hostip  "<< mstnode._hostip <<"validate "<<mstnode._validtime<<endl;
