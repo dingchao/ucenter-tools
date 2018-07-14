@@ -249,7 +249,7 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
     while (resultSet->next()) {
         mstnode._masteraddr = resultSet->getString(2); // ultSet->getString("addr" )
         mstnode._txid      = resultSet->getString(4);
-		mstnode._outid	   = resultSet->getInt(5)
+		mstnode._outid	   = resultSet->getInt(5);
         mstnode._hostname  = resultSet->getString(6);
         mstnode._hostip   = resultSet->getString(7);
 		mstnode._validflag = resultSet->getInt(13);
@@ -305,7 +305,7 @@ validflag             int NOT NULL DEFAULT '0',
     while (resultSet->next()) {
         mstnode._masteraddr = resultSet->getString(2 ); // ultSet->getString("addr" )
         mstnode._txid      = resultSet->getString(4);
-		mstnode._outid	   = resultSet->getInt(5)    
+		mstnode._outid	   = resultSet->getInt(5);    
         mstnode._hostname  = resultSet->getString(6);  
         mstnode._hostip   = resultSet->getString(7);
 		mstnode._validflag = resultSet->getInt(13); 
