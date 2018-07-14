@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
    Secp256k1Init eccinit("main");
    
    ConnPool::GetInstance(dbuser, dbpass , nThread*2); 
-   testdb();
+   //testdb();
    {
      EventLoop loop;
      uint16_t port = static_cast<uint16_t>(nPort);
