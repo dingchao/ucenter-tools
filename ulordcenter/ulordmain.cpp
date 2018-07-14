@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
    Secp256k1Init eccinit("main");
    
    ConnPool::GetInstance(dbuser, dbpass , nThread*2); 
-   //testdb();
+   testdb();
    {
      EventLoop loop;
      uint16_t port = static_cast<uint16_t>(nPort);
@@ -43,8 +43,8 @@ void  testdb()
     ConnPool* pPool =  ConnPool::GetInstance(); 
     sql::Connection *  pConn = pPool->GetConnection();
     std::vector<CMstNodeData>vecnode;
-    ReadMasterNodeToNet(pConn, std::string("NdsRM9waShDUT3TqhgdsGCzqH33Wwb8zDB"), vecnode);
-    ReadAllNodeToNet(pConn, vecnode);
+    ReadMasterNodeToNet(pConn, std::string("URPf5qfxhyHSztK71WCzEFemnhfE4PSE8w"), vecnode);
+    //ReadAllNodeToNet(pConn, vecnode);
 
 }
 
