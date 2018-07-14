@@ -120,7 +120,8 @@ private:
     {  
         ar & _version;  
         ar & _masteraddr;  
-        //ar & _txid;  
+        ar & _txid;
+		ar & _outid;
         ar & _hostname;  
         ar & _hostip;  
         ar & _validflag;
@@ -158,12 +159,15 @@ public:
         _validflag = b._validflag;
 		_validtime = b._validtime;
 		_certificate = b._certificate;
+		_txid      = b._txid;
+		_outid     = b._outid;
         return * this;
     }
 public:  
     int _version;  
     std::string _masteraddr; // node addr
-    std::string _txid;      //  
+    std::string _txid;      //
+    int         _outid;
     std::string _hostname;  // 
     std::string _hostip;    // 
     int         _validflag; //

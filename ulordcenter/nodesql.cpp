@@ -248,6 +248,8 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
     int i = 0;
     while (resultSet->next()) {
         mstnode._masteraddr = resultSet->getString(2); // ultSet->getString("addr" )
+        mstnode._txid      = resultSet->getString(4);
+		mstnode._outid	   = resultSet->getInt(5)
         mstnode._hostname  = resultSet->getString(6);
         mstnode._hostip   = resultSet->getString(7);
 		mstnode._validflag = resultSet->getInt(13);
@@ -255,8 +257,9 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
 		mstnode._certificate = resultSet->getString(15);
         vecnode.push_back(mstnode);
         AddMasterNodeMemory(mstnode._masteraddr, mstnode._validflag);
-        cout<<"master addr  "<<  mstnode._masteraddr <<"hostname " << mstnode._hostname << "hostip  "<< mstnode._hostip <<"validate "<<mstnode._validtime<<endl;
+        cout<<"master addr:  "<<  mstnode._masteraddr <<" txid " << mstnode._txid << " outid  "<< mstnode._outid <<" validate "<<mstnode._validtime<<endl;
         i++;
+		cout<<"certificate:" <<SignMessage(mstnode._txid, mstnode._outid, mstnode._masteraddr, mstnode._validtime) <<endl;
     }
 
     cout<<"total "<<i<<" record"<<endl;
@@ -301,12 +304,14 @@ validflag             int NOT NULL DEFAULT '0',
     int i = 0;
     while (resultSet->next()) {
         mstnode._masteraddr = resultSet->getString(2 ); // ultSet->getString("addr" )
+        mstnode._txid      = resultSet->getString(4);
+		mstnode._outid	   = resultSet->getInt(5)    
         mstnode._hostname  = resultSet->getString(6);  
         mstnode._hostip   = resultSet->getString(7);
 		mstnode._validflag = resultSet->getInt(13); 
 		mstnode._validtime = resultSet->getInt(14);
 		mstnode._certificate = resultSet->getString(15);
-        cout<<"master addr "<<  mstnode._masteraddr <<" hostname " << mstnode._hostname << " hostip "<< mstnode._hostip << " validflag " << mstnode._validflag <<endl;
+        cout<<"master addr:  "<<  mstnode._masteraddr <<" txid " << mstnode._txid << " outid  "<< mstnode._outid <<" validate "<<mstnode._validtime<<endl;
         vecnode.push_back(mstnode);
         i++;
     }
