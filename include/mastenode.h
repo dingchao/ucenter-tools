@@ -69,9 +69,6 @@ public:
     int             _msgversion;
     int             _num;
     std::string     _verfyflag;
-	
-	std::string _certificate; //证书
-	int64_t _validTimes;  //注册有效时间
     std::string     _signstr;
     friend class boost::serialization::access;
 
