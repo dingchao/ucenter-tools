@@ -197,16 +197,21 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
     mstres._signstr = SignMessage(vecnode[0]._masteraddr, mstquest._timeStamps); 
     std::ostringstream os;  
     boost::archive::binary_oarchive oa(os);  
-    oa<<mstres; 
+    oa<<mstres;
+    cout << "size:"<< mstres._num << "sign:"<< mstres._signstr<<endl;
     for(auto node : vecnode) 
     {
     	cout << "write in msg Masternode " << node._masteraddr << endl << "valid flag = " << node._validflag << endl;
+	cout << node._certificate <<" " << node._validtime <<endl;
         oa << node;//序列化到一个ostringstream里面  
     } 
-    std::string content = os.str();//content保存了序列化后的数据。  
+    //std::string content = os.str();//content保存了序列化后的数据。  
+    std::string content = os.str();
+    //cout <<"send string:"<< content <<endl;
     muduo::StringPiece message(content);
     //codec.send(get_pointer(*tcpcli), message);
     codec.send(tcpcli, message);
+	cout <<"send string:"<< message.data() << "len=" << message.size()<< endl;
     cout << "codes send finished "   << endl;
     return 0;
 }
