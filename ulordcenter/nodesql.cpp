@@ -13,6 +13,7 @@
 #include "utilstrencodings.h"
 #include "initwallet.h"
 #include "messagesigner.h"
+#include "primitives/transaction.h"
 
 using namespace muduo;
 using namespace muduo::net;
@@ -123,7 +124,7 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
     uint256 txid;
     txid.SetHex(mstquest._txid);
     std::vector<CMstNodeData> vecnode;
-	COutPoint mnVin = COutPoint(txid, mstquest._txid)
+    COutPoint mnVin = COutPoint(txid, mstquest._voutid);
     if(mstquest._questtype == MST_QUEST_ONE)
     {
        // 先从内存中找 如果找不到就从数据库找  超时连接要断掉 超过1分钟
@@ -146,7 +147,7 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
            if(vecnode.size()==0)
            {
               AddMasterNodeMemory(mnVin, 0);
-              CMstNodeData node(0,mstquest._masteraddr);
+              CMstNodeData node(0,mstquest._txid, mstquest._voutid);
               node._validflag=0;
               cout << "find from sql   get is null "   << endl;
               
@@ -233,16 +234,16 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
     while (resultSet->next()) {
         mstnode._hostname  = resultSet->getString(5);
         mstnode._txid      = resultSet->getString(6);
-		mstnode._voutid    = resultSet->getString(7);
+	mstnode._voutid    = resultSet->getInt(7);
         mstnode._hostip    = resultSet->getString(8);
-		mstnode._validflag = resultSet->getInt(11);
-		mstnode._licperiod = resultSet->getInt(12);
-		mstnode._licence   = resultSet->getInt(13);
+	mstnode._validflag = resultSet->getInt(11);
+	mstnode._licperiod = resultSet->getInt(12);
+	mstnode._licence   = resultSet->getInt(13);
         vecnode.push_back(mstnode);
 
-		uint256 txid;
-		txid.SetHex(mstnode._txid);
-		COutPoint mnVin = COutPoint(txid, mstnode._voutid)
+	uint256 txid;
+	txid.SetHex(mstnode._txid);
+	COutPoint mnVin = COutPoint(txid, mstnode._voutid);
         AddMasterNodeMemory(mnVin, mstnode._validflag);
         cout<<"master tx  "<< mstnode._txid << " vouid " << mstnode._voutid <<" hostname " << mstnode._hostname << " hostip  "<< mstnode._hostip <<endl;
         i++;
@@ -296,14 +297,14 @@ void  ReadMasterNodeToNet(sql::Connection * con, std::string txid, unsigned int 
     sql::ResultSet * resultSet =  stmt->executeQuery(sqlBuf);
     int i = 0;
     while (resultSet->next()) {
-		mstnode._hostname  = resultSet->getString(5);
+	mstnode._hostname  = resultSet->getString(5);
         mstnode._txid      = resultSet->getString(6);
-		mstnode._voutid    = resultSet->getString(7);
+	mstnode._voutid    = resultSet->getInt(7);
         mstnode._hostip    = resultSet->getString(8);
-		mstnode._validflag = resultSet->getInt(11);
-		mstnode._licperiod = resultSet->getInt(12);
-		mstnode._licence   = resultSet->getInt(13);
-        cout<<"master addr "<<  mstnode._masteraddr <<" hostname " << mstnode._hostname << " hostip "<< mstnode._hostip << " validflag " << mstnode._validflag <<endl;
+	mstnode._validflag = resultSet->getInt(11);
+	mstnode._licperiod = resultSet->getInt(12);
+	mstnode._licence   = resultSet->getInt(13);
+        cout<<"master txid "<<  mstnode._txid << " voutid " << mstnode._voutid  << " hostname " << mstnode._hostname << " hostip "<< mstnode._hostip << " validflag " << mstnode._validflag <<endl;
         vecnode.push_back(mstnode);
         i++;
     }
@@ -314,5 +315,4 @@ void  ReadMasterNodeToNet(sql::Connection * con, std::string txid, unsigned int 
     cout<<"total "<<i<<" record"<<endl;
     delete stmt;
     delete resultSet;
-
 }
