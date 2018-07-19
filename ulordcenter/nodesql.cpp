@@ -23,12 +23,12 @@ using namespace boost;
 std::string g_privkeystr;
 std::string g_pubkeystr;
 
-std::map<std::string , CMstNodeData> g_mstdatamap;
+std::map<COutPoint , CMstNodeData> g_mstdatamap;
 unsigned int  g_curtime;
 const unsigned int   TIME_INTERVAL = 120;
-bool FindFromMasterNodeMemory( std::string masteraddr, std::vector<CMstNodeData> & vecnode  )
+bool FindFromMasterNodeMemory( COutPoint masterVin, std::vector<CMstNodeData> & vecnode  )
 {
-    std::map<std::string, CMstNodeData>::iterator it  =   g_mstdatamap.find(masteraddr);
+    std::map<COutPoint, CMstNodeData>::iterator it  =   g_mstdatamap.find(masterVin);
 //   加个时间判断 超过一定的时间 就重新度数据库 
    if(it != g_mstdatamap.end())
    {
@@ -54,13 +54,13 @@ bool FindFromMasterNodeMemory( std::string masteraddr, std::vector<CMstNodeData>
        
 }
 
-void   AddMasterNodeMemory(std::string masteraddr ,int  invalidflag  )
+void AddMasterNodeMemory(COutPoint masterVin ,int  invalidflag  )
 {
-    CMstNodeData mstnode(0,masteraddr);
+    CMstNodeData mstnode(0,masterVin.hash.GetHex(), masterVin.n);
     mstnode._validflag= invalidflag; // 0 is invalid;  1 is valid
     mstnode._time = g_curtime; 
 
-    std::map<std::string, CMstNodeData>::iterator it  =   g_mstdatamap.find(masteraddr);
+    std::map<COutPoint, CMstNodeData>::iterator it  =   g_mstdatamap.find(masterVin);
    //   加个时间判断 超过一定的时间 就重新度数据库 
    if(it != g_mstdatamap.end())
    {
@@ -68,31 +68,32 @@ void   AddMasterNodeMemory(std::string masteraddr ,int  invalidflag  )
    }
    else
    {
-      g_mstdatamap.insert(pair<std::string,CMstNodeData>(masteraddr,mstnode ));
+      g_mstdatamap.insert(pair<COutPoint,CMstNodeData>(masterVin,mstnode ));
    }  
 }
 
-void   AddMasterNodeMemory(std::string masteraddr , CMstNodeData &  node  )
+void   AddMasterNodeMemory(COutPoint masterVin, CMstNodeData & node)
 {
    node._time = g_curtime;
-   std::map<std::string, CMstNodeData>::iterator it  =   g_mstdatamap.find(masteraddr);
+   std::map<COutPoint, CMstNodeData>::iterator it  =   g_mstdatamap.find(masterVin);
    if(it != g_mstdatamap.end())
    {
       it->second._validflag=node._validflag; 
    }
    else   
    {
-       g_mstdatamap.insert(pair<std::string,CMstNodeData>(masteraddr,node )); 
+       g_mstdatamap.insert(pair<COutPoint,CMstNodeData>(masterVin, node)); 
    } 
 }
-// sign  addr
-std::string  SignMessage( std::string addr, int64_t timeStamps)
+
+// sign  COutPoint
+std::string SignMessage( COutPoint vin, int64_t timeStamps)
 {
    CKey keyRet;
    CPubKey pubkeyRet;
-   GetKeyFromString(  keyRet,  pubkeyRet,  g_privkeystr,   g_pubkeystr ) ;
+   GetKeyFromString(keyRet, pubkeyRet, g_privkeystr, g_pubkeystr);
     
-   CPubKey testKey(ParseHex(g_pubkeystr));
+   //CPubKey testKey(ParseHex(g_pubkeystr));
 
    /*cout<< "Pubkey: str=" << g_pubkeystr << endl
    		<< "center key=" << pubkeyRet.GetID().ToString() << endl
@@ -104,7 +105,7 @@ std::string  SignMessage( std::string addr, int64_t timeStamps)
     std::vector<unsigned char> vchSigRet;
     std::vector<unsigned char> vchkey;
 
-    messSign.SignMessage(addr, timeStamps, vchSigRet, keyRet);
+    messSign.SignMessage(vin.ToString(), timeStamps, vchSigRet, keyRet);
     //cout<<"vchsigret "<< HexStr(vchSigRet)<<endl<<"vchsig "<< EncodeBase64(&vchSigRet[0], vchSigRet.size())<<endl<<"pubkey "<<pubkeyRet.GetID().ToString()<<endl;
     return HexStr(vchSigRet);
 }
@@ -118,12 +119,15 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
     mstnodequest  mstquest;  
     std::istringstream is(buf);  
     boost::archive::binary_iarchive ia(is);  
-    ia >> mstquest;//从一个保存序列化数据的string里面反序列化，从而得到原来的对象。 
+    ia >> mstquest;//从一个保存序列化数据的string里面反序列化，从而得到原来的对象。
+    uint256 txid;
+    txid.SetHex(mstquest._txid);
     std::vector<CMstNodeData> vecnode;
+	COutPoint mnVin = COutPoint(txid, mstquest._txid)
     if(mstquest._questtype == MST_QUEST_ONE)
     {
-       // 先从内存中找 如果找不到就从数据库找  超时连接要断掉 超过1分钟   
-       if(FindFromMasterNodeMemory( mstquest._masteraddr, vecnode  )==true)
+       // 先从内存中找 如果找不到就从数据库找  超时连接要断掉 超过1分钟
+       if(FindFromMasterNodeMemory(mnVin, vecnode)==true)
        {
            // find        
           cout << " FindFromMasterNodeMemory  true "   << endl;
@@ -138,11 +142,11 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
                return 0;
            }         
    
-           ReadMasterNodeToNet(pConn, mstquest._masteraddr, vecnode); 
+           ReadMasterNodeToNet(pConn, mstquest._txid, mstquest._voutid, vecnode); 
            if(vecnode.size()==0)
            {
-              AddMasterNodeMemory(mstquest._masteraddr , false  );
-              CMstNodeData   node(0,mstquest._masteraddr);
+              AddMasterNodeMemory(mnVin, 0);
+              CMstNodeData node(0,mstquest._masteraddr);
               node._validflag=0;
               cout << "find from sql   get is null "   << endl;
               
@@ -150,7 +154,7 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
            }
            else
            {
-               AddMasterNodeMemory(mstquest._masteraddr , vecnode[0]  );
+               AddMasterNodeMemory(mnVin, vecnode[0]);
            } 
            
            cout << "find from sql   get  size  " << vecnode.size()  << endl;
@@ -174,13 +178,13 @@ int   ParseQuest(const TcpConnectionPtr & tcpcli,const std::string &buf, LengthH
 
     mstnoderes  mstres(mstquest._msgversion);
     mstres._num= vecnode.size();
-    mstres._signstr = SignMessage(vecnode[0]._masteraddr, mstquest._timeStamps);
+    //mstres._signstr = SignMessage(vecnode[0]._masteraddr, mstquest._timeStamps);
     std::ostringstream os;  
     boost::archive::binary_oarchive oa(os);  
     oa<<mstres; 
     for(auto node : vecnode) 
     {
-    	cout << "write in msg Masternode " << node._masteraddr << endl << "valid flag = " << node._validflag << endl;
+    	cout << "write in msg Masternode " << node._txid << " voutid = " << node._voutid << " valid flag = " << node._validflag << endl;
         oa << node;//序列化到一个ostringstream里面  
     } 
     std::string content = os.str();//content保存了序列化后的数据。  
@@ -212,7 +216,7 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
 {
     char sqlBuf[500] = {""};
 
-    sprintf(sqlBuf ,"select *from ulord_master ");
+    sprintf(sqlBuf ,"select *from udevforums_major_node_bind ");
 
     sql::Statement * stmt = NULL;
     stmt = con->createStatement();
@@ -227,13 +231,20 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
     sql::ResultSet * resultSet =  stmt->executeQuery(sqlBuf);
     int i = 0;
     while (resultSet->next()) {
-        mstnode._masteraddr = resultSet->getString(2); // ultSet->getString("addr" )
-        mstnode._hostname  = resultSet->getString(6);
-        mstnode._hostip   = resultSet->getString(7);
-		mstnode._validflag = resultSet->getInt(13);
+        mstnode._hostname  = resultSet->getString(5);
+        mstnode._txid      = resultSet->getString(6);
+		mstnode._voutid    = resultSet->getString(7);
+        mstnode._hostip    = resultSet->getString(8);
+		mstnode._validflag = resultSet->getInt(11);
+		mstnode._licperiod = resultSet->getInt(12);
+		mstnode._licence   = resultSet->getInt(13);
         vecnode.push_back(mstnode);
-        AddMasterNodeMemory(mstnode._masteraddr, mstnode._validflag);
-        cout<<"master addr  "<<  mstnode._masteraddr <<" hostname " << mstnode._hostname << " hostip  "<< mstnode._hostip <<endl;
+
+		uint256 txid;
+		txid.SetHex(mstnode._txid);
+		COutPoint mnVin = COutPoint(txid, mstnode._voutid)
+        AddMasterNodeMemory(mnVin, mstnode._validflag);
+        cout<<"master tx  "<< mstnode._txid << " vouid " << mstnode._voutid <<" hostname " << mstnode._hostname << " hostip  "<< mstnode._hostip <<endl;
         i++;
     }
 
@@ -243,12 +254,12 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
 
 }
 
-void  ReadMasterNodeToNet(sql::Connection * con, std::string nodeaddr,std::vector<CMstNodeData>& vecnode)
+void  ReadMasterNodeToNet(sql::Connection * con, std::string txid, unsigned int voutid,std::vector<CMstNodeData>& vecnode)
 {
     char sqlBuf[500] = {""};
 
-    sprintf(sqlBuf ,"select *from ulord_master where addr =\'%s\'",
-          nodeaddr.c_str());
+    sprintf(sqlBuf ,"select *from udevforums_major_node_bind where trade_txid =\'%s\' and trade_vout_no = %d",
+          txid.c_str(), voutid);
 
     sql::Statement * stmt = NULL;
     stmt = con->createStatement();
@@ -260,28 +271,38 @@ void  ReadMasterNodeToNet(sql::Connection * con, std::string nodeaddr,std::vecto
     }
     stmt->execute("SET CHARSET GB2312");
     stmt->execute("USE mysql");
-/*id_index            int(4) not null primary key,
-addr                  char(50) not null,
-amount                bigint NOT NULL DEFAULT '0',
-txid                  char(50) NOT NULL,
-outid				  int(4) NOT NULL,
-hostname              char(50) NULL DEFAULT ' ',
-ip                    char(50) NULL DEFAULT ' ',
-disksize              int NOT NULL DEFAULT '0',
-netsize               int NOT NULL DEFAULT '0',
-cpusize               int NOT NULL DEFAULT '0',
-ramsize               int NOT NULL DEFAULT '0',
-score                 int NOT NULL DEFAULT '0',
-validflag             int NOT NULL DEFAULT '0',
+/*
+1     `id` BIGINT (20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+2	 `gmt_create` BIGINT (20) NOT NULL COMMENT '创建时间',
+3	 `gmt_modify` BIGINT (20) NOT NULL COMMENT '修改时间',
+4	 `user_id` VARCHAR (32) DEFAULT NULL,
+5	 `major_node_nickname` VARCHAR (64) DEFAULT NULL COMMENT '主节点昵称',
+6	 `trade_txid` VARCHAR (64) DEFAULT NULL COMMENT '1万UT交易ID',
+7	 `trade_vout_no` VARCHAR (64) DEFAULT NULL COMMENT '1万UT交易ID对应的Vout序号',
+8	 `ip_address` VARCHAR (64) DEFAULT NULL COMMENT '主节点IP地址',
+9	 `special_code` VARCHAR (255) DEFAULT NULL COMMENT '主节点特征码',
+10	 `status` INT (3) DEFAULT '0' COMMENT '状态,0:绑定中,1:绑定确认成功,2.绑定确认失败',
+11	 `validflag` INT (3) DEFAULT '0' COMMENT '有效标志位,0为无效标志，1为有效，不由用户填写' 
+12	 `validdate` BIGINT (20) DEFAULT '0' COMMENT '签证的有效期 validflag=1有效 必填',  
+13	 `certificate` VARCHAR (255) DEFAULT NULL COMMENT '证书',
+14	 `ut_addr` VARCHAR (255) DEFAULT NULL COMMENT 'Ulord地址',
+15	 `remark` VARCHAR (255) DEFAULT NULL COMMENT '绑定确认失败原因',
+16	 `audit_num` INT (3) NOT NULL DEFAULT '0' COMMENT '绑定确认次数',
+17	 `auditor` VARCHAR (32) DEFAULT NULL COMMENT '绑定确认审核人',
+18	 `gmt_audit` BIGINT (20) DEFAULT NULL COMMENT '绑定确认审核时间',
+19	 `ext_info` VARCHAR (255) DEFAULT NULL COMMENT '扩展信息',
  */
     CMstNodeData mstnode;
     sql::ResultSet * resultSet =  stmt->executeQuery(sqlBuf);
     int i = 0;
     while (resultSet->next()) {
-        mstnode._masteraddr = resultSet->getString(2 ); // ultSet->getString("addr" )
-        mstnode._hostname  = resultSet->getString(6);  
-        mstnode._hostip   = resultSet->getString(7);
-		mstnode._validflag = resultSet->getInt(13); 
+		mstnode._hostname  = resultSet->getString(5);
+        mstnode._txid      = resultSet->getString(6);
+		mstnode._voutid    = resultSet->getString(7);
+        mstnode._hostip    = resultSet->getString(8);
+		mstnode._validflag = resultSet->getInt(11);
+		mstnode._licperiod = resultSet->getInt(12);
+		mstnode._licence   = resultSet->getInt(13);
         cout<<"master addr "<<  mstnode._masteraddr <<" hostname " << mstnode._hostname << " hostip "<< mstnode._hostip << " validflag " << mstnode._validflag <<endl;
         vecnode.push_back(mstnode);
         i++;

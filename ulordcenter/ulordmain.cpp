@@ -43,7 +43,7 @@ void  testdb()
     ConnPool* pPool =  ConnPool::GetInstance(); 
     sql::Connection *  pConn = pPool->GetConnection();
     std::vector<CMstNodeData>vecnode;
-    ReadMasterNodeToNet(pConn, std::string("NdsRM9waShDUT3TqhgdsGCzqH33Wwb8zDB"), vecnode);
+    //ReadMasterNodeToNet(pConn, std::string("NdsRM9waShDUT3TqhgdsGCzqH33Wwb8zDB"), vecnode);
     ReadAllNodeToNet(pConn, vecnode);
 
 }
