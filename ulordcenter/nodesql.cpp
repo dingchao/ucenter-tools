@@ -234,16 +234,16 @@ void ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode )
     while (resultSet->next()) {
         mstnode._hostname  = resultSet->getString(5);
         mstnode._txid      = resultSet->getString(6);
-	mstnode._voutid    = resultSet->getInt(7);
+        mstnode._voutid    = resultSet->getInt(7);
         mstnode._hostip    = resultSet->getString(8);
-	mstnode._validflag = resultSet->getInt(11);
-	mstnode._licperiod = resultSet->getInt(12);
-	mstnode._licence   = resultSet->getInt(13);
+        mstnode._validflag = resultSet->getInt(11);
+        mstnode._licperiod = resultSet->getInt(12);
+        mstnode._licence   = resultSet->getInt(13);
         vecnode.push_back(mstnode);
 
-	uint256 txid;
-	txid.SetHex(mstnode._txid);
-	COutPoint mnVin = COutPoint(txid, mstnode._voutid);
+        uint256 txid;
+        txid.SetHex(mstnode._txid);
+        COutPoint mnVin = COutPoint(txid, mstnode._voutid);
         AddMasterNodeMemory(mnVin, mstnode._validflag);
         cout<<"master tx  "<< mstnode._txid << " vouid " << mstnode._voutid <<" hostname " << mstnode._hostname << " hostip  "<< mstnode._hostip <<endl;
         i++;
@@ -297,13 +297,13 @@ void  ReadMasterNodeToNet(sql::Connection * con, std::string txid, unsigned int 
     sql::ResultSet * resultSet =  stmt->executeQuery(sqlBuf);
     int i = 0;
     while (resultSet->next()) {
-	mstnode._hostname  = resultSet->getString(5);
+        mstnode._hostname  = resultSet->getString(5);
         mstnode._txid      = resultSet->getString(6);
-	mstnode._voutid    = resultSet->getInt(7);
+        mstnode._voutid    = resultSet->getInt(7);
         mstnode._hostip    = resultSet->getString(8);
-	mstnode._validflag = resultSet->getInt(11);
-	mstnode._licperiod = resultSet->getInt(12);
-	mstnode._licence   = resultSet->getInt(13);
+        mstnode._validflag = resultSet->getInt(11);
+        mstnode._licperiod = resultSet->getInt(12);
+        mstnode._licence   = resultSet->getInt(13);
         cout<<"master txid "<<  mstnode._txid << " voutid " << mstnode._voutid  << " hostname " << mstnode._hostname << " hostip "<< mstnode._hostip << " validflag " << mstnode._validflag <<endl;
         vecnode.push_back(mstnode);
         i++;
