@@ -28,14 +28,14 @@ class  mstnodequest
 public:
     mstnodequest(int version, MST_QUEST  type  ):_msgversion(version), _questtype(type)
     {
-       _verfyflag=std::string("#$%@");  
+       //_verfyflag=std::string("#$%@");  
     }  
 
     mstnodequest(){}
     int             _msgversion; 	
     int             _questtype;
 	int64_t         _timeStamps;	
-    std::string     _verfyflag;
+    //std::string     _verfyflag;
     std::string     _txid;
 	unsigned int    _voutid;
     friend class boost::serialization::access;
@@ -43,7 +43,7 @@ public:
     template<class Archive>
     void serialize(Archive& ar, const unsigned int version)
     {  
-        ar & _verfyflag;
+        //ar & _verfyflag;
         ar & _msgversion;
 		ar & _timeStamps;
         ar & _questtype;
