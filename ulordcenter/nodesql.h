@@ -21,7 +21,7 @@
 #include "mastenode.h"
 
 void   ReadAllNodeToNet(sql::Connection * con,std::vector<CMstNodeData>& vecnode );
-void   ReadMasterNodeToNet( sql::Connection * con, std::string nodeaddr,std::vector<CMstNodeData>& vecnode);
+void   ReadMasterNodeToNet( sql::Connection * con, std::string txid, unsigned int voutid, std::vector<CMstNodeData>& vecnode);
 int    ParseQuest(const muduo::net::TcpConnectionPtr & tcpcli, const std::string &buf, LengthHeaderCodec& codec );
 void   initreaddb();
 extern std::string  g_privkeystr;

@@ -28,30 +28,36 @@ class  mstnodequest
 public:
     mstnodequest(int version, MST_QUEST  type  ):_msgversion(version), _questtype(type)
     {
-       _verfyflag=std::string("#$%@");  
+       //_verfyflag=std::string("#$%@");  
     }  
 
     mstnodequest(){}
     int             _msgversion; 	
     int             _questtype;
 	int64_t         _timeStamps;	
-    std::string     _verfyflag;
-    std::string     _masteraddr;
+    //std::string     _verfyflag;
+    std::string     _txid;
+	unsigned int    _voutid;
     friend class boost::serialization::access;
     
     template<class Archive>
     void serialize(Archive& ar, const unsigned int version)
     {  
-        ar & _verfyflag;
+        //ar & _verfyflag;
         ar & _msgversion;
 		ar & _timeStamps;
         ar & _questtype;
-        ar & _masteraddr;
+        ar & _txid;
+		ar & _voutid;
         //ar & _llAmount;  
     }  
     int   GetVersion() const {return _msgversion;}  
     int   GetQuestType() const {return _questtype;}  
-    void  SetMasterAddr(std::string addr){ _masteraddr=addr;}    
+    //void  SetMasterAddr(std::string addr){ _masteraddr=addr;}   
+    std::string GetKey() const
+	{
+    	return strprintf("%s-%u", _txid, _voutid);
+	}
 
 };
 // master node quest version 
@@ -60,7 +66,7 @@ class  mstnoderes
 public:
     mstnoderes(int version  ):_msgversion(version)
     {
-       _verfyflag=std::string("#$%@");
+       //_verfyflag=std::string("#$%@");
        _num=1;
     }
 
@@ -68,17 +74,18 @@ public:
 
     int             _msgversion;
     int             _num;
-    std::string     _verfyflag;
-    std::string     _signstr;
+    //std::string     _verfyflag;
+    //int64_t         _licperiod;  //licence period
+    //std::string     _licence;    //licence
     friend class boost::serialization::access;
 
     template<class Archive>
     void serialize(Archive& ar, const unsigned int version)
     {
-        ar & _verfyflag;
+        //ar & _verfyflag;
         ar & _msgversion;
         ar & _num;
-        ar & _signstr;  // 使用 查询的第一个地址来签名  。 
+        //ar & _signstr;  // 使用 查询的第一个地址来签名  。 
         //ar & _llAmount;  
     }
     int GetVersion() const {return _msgversion;}
@@ -107,6 +114,27 @@ public:
    }
 };
 
+/*
+1     `id` BIGINT (20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+2	 `gmt_create` BIGINT (20) NOT NULL COMMENT '创建时间',
+3	 `gmt_modify` BIGINT (20) NOT NULL COMMENT '修改时间',
+4	 `user_id` VARCHAR (32) DEFAULT NULL,
+5	 `major_node_nickname` VARCHAR (64) DEFAULT NULL COMMENT '主节点昵称',
+6	 `trade_txid` VARCHAR (64) DEFAULT NULL COMMENT '1万UT交易ID',
+7	 `trade_vout_no` VARCHAR (64) DEFAULT NULL COMMENT '1万UT交易ID对应的Vout序号',
+8	 `ip_address` VARCHAR (64) DEFAULT NULL COMMENT '主节点IP地址',
+9	 `special_code` VARCHAR (255) DEFAULT NULL COMMENT '主节点特征码',
+10	 `status` INT (3) DEFAULT '0' COMMENT '状态,0:绑定中,1:绑定确认成功,2.绑定确认失败',
+11	 `validflag` INT (3) DEFAULT '0' COMMENT '有效标志位,0为无效标志，1为有效，不由用户填写' 
+12	 `validdate` BIGINT (20) DEFAULT '0' COMMENT '签证的有效期 validflag=1有效 必填',  
+13	 `certificate` VARCHAR (255) DEFAULT NULL COMMENT '证书',
+14	 `ut_addr` VARCHAR (255) DEFAULT NULL COMMENT 'Ulord地址',
+15	 `remark` VARCHAR (255) DEFAULT NULL COMMENT '绑定确认失败原因',
+16	 `audit_num` INT (3) NOT NULL DEFAULT '0' COMMENT '绑定确认次数',
+17	 `auditor` VARCHAR (32) DEFAULT NULL COMMENT '绑定确认审核人',
+18	 `gmt_audit` BIGINT (20) DEFAULT NULL COMMENT '绑定确认审核时间',
+19	 `ext_info` VARCHAR (255) DEFAULT NULL COMMENT '扩展信息',
+ */
 class CMstNodeData  
 {  
 private:  
@@ -115,64 +143,56 @@ private:
     template<class Archive>  
     void serialize(Archive& ar, const unsigned int version)  
     {  
-        ar & _version;  
-        ar & _masteraddr;  
+        ar & _version;
         ar & _txid;
-		ar & _outid;
-        ar & _hostname;  
-        ar & _hostip;  
+		ar & _voutid;
+        ar & _hostname;
+        ar & _hostip;
         ar & _validflag;
-        //ar & _llAmount; 
-        ar & _validtime;
-		ar & _certificate;
-    }  
-/*addr char(50) not null primary key,
-amount bigint NOT NULL DEFAULT '0',
-txid       char(50) null,
-hostname   char(50) NULL DEFAULT ' ',
-ip         char(50) NULL DEFAULT ' ',
-disksize     int NOT NULL DEFAULT '0',
-netsize      int NOT NULL DEFAULT '0',
-cpusize      int NOT NULL DEFAULT '0',
-ramsize      int NOT NULL DEFAULT '0',
-score        int NOT NULL DEFAULT '0',
- */ 
+		ar & _licperiod;
+		ar & _licence;
+		ar & _pubkey;
+    }
       
 public:  
-    CMstNodeData():_version(0), _masteraddr(""){}  
+    CMstNodeData():_version(0), _txid(""), _voutid(0), _validflag(0){}  
   
-    CMstNodeData(int version, std::string addr):_version(version), _masteraddr(addr){}  
+    CMstNodeData(int version, std::string txid, unsigned int voutid):_version(version), _txid(txid), _voutid(voutid){}  
   
     int GetVersion() const {return _version;}  
     int GetValidFlag() const {return _validflag;}  
-    std::string GetMasterAddr() const {return _masteraddr;}  
+    //std::string GetMasterAddr() const {return _masteraddr;}  
+    std::string GetKey() const
+	{
+    	return strprintf("%s-%u", _txid, _voutid);
+	}
 
     CMstNodeData & operator=(CMstNodeData &b)
     {
         _version   = b._version;
-        _masteraddr= b._masteraddr;
+        _txid      = b._txid;
+		_voutid    = b._voutid;
         _hostname  = b._hostname;
         _hostip    = b._hostip;
         _validflag = b._validflag;
-		_validtime = b._validtime;
-		_certificate = b._certificate;
-		_txid      = b._txid;
-		_outid     = b._outid;
+		_licperiod = b._licperiod;
+		_licence   = b._licence;
+		_pubkey    = b._pubkey;
         return * this;
     }
 public:  
     int _version;  
-    std::string _masteraddr; // node addr
-    std::string _txid;      //
-    int         _outid;
-    std::string _hostname;  // 
-    std::string _hostip;    // 
-    int         _validflag; //
-    int64_t _validtime;  //到期日期
-    std::string _certificate; //证书
-    unsigned int _time;
-    long long   _llAmount;  // 
-    std::string _text;  
+    //std::string  _masteraddr; // node addr
+    std::string  _txid;       //
+    unsigned int _voutid;
+    std::string  _hostname;   // 
+    std::string  _hostip;     // 
+    int          _validflag;  //
+    int64_t      _licperiod;  //licence period
+    std::string  _licence;    //licence
+    std::string  _pubkey;     //
+    unsigned int _time;       //read db time
+    //std::string  _text;  
 };  
 
 #endif

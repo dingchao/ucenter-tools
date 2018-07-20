@@ -23,7 +23,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 #add_executable(testma ${APP_SRC})
 
 set(IMPORTLIB 
-hell mysqlclient pthread  boost_system boost_filesystem boost_program_options boost_thread boost_thread  boost_log  m
+mysqlclient pthread  boost_system boost_filesystem boost_program_options boost_thread boost_thread  boost_log  m
 boost_log_setup 
 )
 

@@ -109,7 +109,7 @@ void printmsg( const std::string &buf )
     for(int i=0;i< mstres._num;i++)
     {
         ia>>mstnode;    
-        LOG_INFO << "mstnode "<<mstnode._masteraddr << " hostname  "<<mstnode._hostname << "  "<< mstnode._hostip;
+        LOG_INFO <<" hostname  "<<mstnode._hostname << "  "<< mstnode._hostip;
     }
     
     return ;
